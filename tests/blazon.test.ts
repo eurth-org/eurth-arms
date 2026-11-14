@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { blazon } from '../src/arms/blazon';
 import { charges } from '../src/arms/catalogue';
-import { cleanArms, defaultArms, divisions, lines, ordinaries, patterns, shapes, countsFor, arrangementsFor, linedDivisions, type Arms } from '../src/arms/model';
+import { attitudes, attitudesFor, cleanArms, defaultArms, divisions, lines, ordinaries, patterns, shapes, countsFor, arrangementsFor, linedDivisions, type Arms } from '../src/arms/model';
 import { MAX_BLAZON, parseBlazon } from '../src/arms/parse';
 import { tinctureIds } from '../src/arms/tinctures';
 import { seeded, wildArms } from './helpers';
@@ -64,6 +64,8 @@ describe('writing a blazon', () => {
     const group = (g: object) => blazon(cleanArms({ field: azure, charges: { tincture: 'or', count: 1, ...g } }));
     expect(group({ charge: 'eagle' })).toBe('Azure, an eagle displayed Or');
     expect(group({ charge: 'lion', attitude: 'passant', count: 3, arrangement: 'inPale' })).toBe('Azure, three lions passant in pale Or');
+    expect(group({ charge: 'lion', attitude: 'passantGuardant', count: 3, arrangement: 'inPale' })).toBe('Azure, three lions passant guardant in pale Or');
+    expect(group({ charge: 'lion', attitude: 'sejantErect' })).toBe('Azure, a lion sejant erect Or');
     expect(group({ charge: 'mullet', points: 6, count: 2 })).toBe('Azure, two mullets of six points in pale Or');
     expect(group({ charge: 'fleurDeLis', count: 3 })).toBe('Azure, three fleurs-de-lis Or');
     expect(group({ charge: 'annulet', count: 5, arrangement: 'inCross' })).toBe('Azure, five annulets in cross Or');
@@ -152,7 +154,9 @@ describe('reading a blazon', () => {
     expect(problem('Azure, a bend sinister Or')).toContain('bend sinister');
     expect(problem('Azure, a canton Or')).toBe('Arms can\'t draw "canton" as a charge yet.');
     expect(problem('Azure, two bars Or')).toBe('Arms can\'t draw "bars" as a charge yet.');
-    expect(problem('Azure, a lion sejant Or')).toBe('Arms can\'t draw "sejant" yet.');
+    expect(problem('Azure, a lion regardant Or')).toBe('Arms can\'t draw "regardant" yet.');
+    expect(problem('Azure, an eagle passant Or')).toBe('Only a lion can be passant here.');
+    expect(problem('Azure, a lion displayed Or')).toBe('Only an eagle can be displayed here.');
     expect(problem('Azure, a mullet rampant Or')).toBe('Only a lion can be rampant here.');
     expect(problem('Azure, a mullet of seven points Or')).toBe('A mullet has five, six or eight points here.');
     expect(problem('Azure, a fess Or, a pale argent')).toContain('one principal ordinary');
@@ -209,6 +213,7 @@ describe('written and read back, arms stay the same', () => {
         for (const tincture of tinctureIds) roundTrip({ field: { kind: 'plain', tincture: 'ermine' }, charges: { charge: 'roundel', count, tincture, arrangement } });
         roundTrip({ field: azure, charges: { charge: 'mullet', count, tincture: 'or', arrangement, points: 8 } });
         roundTrip({ field: azure, charges: { charge: 'lion', count, tincture: 'or', arrangement, attitude: 'passant' } });
+        for (const attitude of attitudes) roundTrip({ field: azure, charges: { charge: attitudesFor('lion').includes(attitude) ? 'lion' : 'eagle', count, tincture: 'or', arrangement, attitude } });
       }
     }
   });

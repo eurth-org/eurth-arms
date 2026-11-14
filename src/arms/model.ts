@@ -69,8 +69,30 @@ export interface Ordinary extends Edge {
 export const arrangements = ['inPale', 'inFess', 'inBend', 'twoAndOne', 'oneAndTwo', 'twoAndTwo', 'inCross', 'inSaltire', 'threeTwoOne'] as const;
 export type Arrangement = (typeof arrangements)[number];
 
-export const attitudes = ['rampant', 'passant'] as const;
+/** How a lion stands, sits or lies. "Guardant" turns its face to the viewer. The first is the usual one. */
+export const lionAttitudes = [
+  'rampant',
+  'rampantGuardant',
+  'passant',
+  'passantGuardant',
+  'statant',
+  'statantGuardant',
+  'salient',
+  'sejant',
+  'sejantErect',
+  'couchant',
+  'dormant',
+  'courant',
+] as const;
+/** How an eagle holds its wings. */
+export const eagleAttitudes = ['displayed', 'rising'] as const;
+export const attitudes = [...lionAttitudes, ...eagleAttitudes] as const;
 export type Attitude = (typeof attitudes)[number];
+
+/** The attitudes a charge can take: none, for all but the beasts. */
+export function attitudesFor(charge: string): readonly Attitude[] {
+  return charge === 'lion' ? lionAttitudes : charge === 'eagle' ? eagleAttitudes : [];
+}
 
 export const mulletPoints = [5, 6, 8] as const;
 export type MulletPoints = (typeof mulletPoints)[number];
@@ -84,7 +106,7 @@ export interface ChargeGroup {
   arrangement?: Arrangement;
   /** Mullets only. */
   points?: MulletPoints;
-  /** Lions only. */
+  /** Lions and eagles only. */
   attitude?: Attitude;
 }
 
@@ -205,7 +227,8 @@ function cleanGroup(value: unknown, place: Place, ordinary?: OrdinaryType): Char
     group.arrangement = oneOf(ways, value.arrangement, ways[0]!);
   }
   if (charge === 'mullet') group.points = mulletPoints.find((p) => p === value.points) ?? 5;
-  if (charge === 'lion') group.attitude = oneOf(attitudes, value.attitude, 'rampant');
+  const stances = attitudesFor(charge);
+  if (stances.length) group.attitude = oneOf(stances, value.attitude, stances[0]!);
   return group;
 }
 
@@ -313,6 +336,18 @@ export const names = {
   } satisfies Record<Arrangement, string>,
   attitude: {
     rampant: 'Rampant',
+    rampantGuardant: 'Rampant guardant',
     passant: 'Passant',
+    passantGuardant: 'Passant guardant',
+    statant: 'Statant',
+    statantGuardant: 'Statant guardant',
+    salient: 'Salient',
+    sejant: 'Sejant',
+    sejantErect: 'Sejant erect',
+    couchant: 'Couchant',
+    dormant: 'Dormant',
+    courant: 'Courant',
+    displayed: 'Displayed',
+    rising: 'Rising',
   } satisfies Record<Attitude, string>,
 } as const;

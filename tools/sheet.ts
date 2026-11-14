@@ -7,7 +7,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { it } from 'vitest';
 import { blazon } from '../src/arms/blazon';
 import { pickable } from '../src/arms/catalogue';
-import { arrangementsFor, cleanArms, countsFor, divisions, lines, ordinaries, patterns, shapes, type Arms } from '../src/arms/model';
+import { arrangementsFor, attitudes, attitudesFor, cleanArms, countsFor, divisions, lines, ordinaries, patterns, shapes, type Arms } from '../src/arms/model';
 import { parseBlazon } from '../src/arms/parse';
 import { armsSvg } from '../src/arms/render';
 
@@ -28,6 +28,7 @@ section('Patterns and furs', [...patterns.flatMap((pattern) => [6, 8].map((count
 section('Ordinaries and lines', ordinaries.flatMap((type) => lines.map((line) => ({ field: azure, ordinary: { type, tincture: 'or', line } }))));
 section('Chief and bordure', lines.flatMap((line) => [{ field: { kind: 'plain', tincture: 'gules' }, chief: { tincture: 'argent', line } }, { field: { kind: 'plain', tincture: 'gules' }, bordure: { tincture: 'argent', line } }]).concat(shapes.map((shape) => ({ shape, field: { kind: 'plain', tincture: 'vert' }, bordure: { tincture: 'or', line: 'engrailed' }, chief: { tincture: 'argent', line: 'straight' } })) as never));
 section('Our own charges', ['mullet', 'crescent', 'roundel', 'annulet', 'fleurDeLis', 'lion', 'eagle', 'emu'].flatMap((charge) => [{ field: azure, charges: { charge, count: 1, tincture: 'or', points: 5 } }, { field: azure, charges: { charge, count: 3, tincture: 'argent', points: 6, attitude: 'passant', arrangement: charge === 'lion' ? 'inPale' : 'twoAndOne' } }]));
+section('Beasts in every attitude', attitudes.flatMap((attitude) => ['or', 'sable', 'argent', 'gules', 'ermine'].map((tincture, i) => ({ field: { kind: 'plain', tincture: ['azure', 'or', 'vert', 'argent', 'gules'][i] }, charges: { charge: attitudesFor('lion').includes(attitude) ? 'lion' : 'eagle', count: 1, tincture, attitude } }))));
 section('Arrangements, on every shape', shapes.flatMap((shape) => countsFor('field').flatMap((count) => arrangementsFor(count).length ? arrangementsFor(count).map((arrangement) => ({ shape, field: { kind: 'plain', tincture: 'sable' }, charges: { charge: 'mullet', count, tincture: 'or', arrangement } })) : [{ shape, field: { kind: 'plain', tincture: 'sable' }, charges: { charge: 'mullet', count, tincture: 'or' } }])));
 section('Around and on each ordinary', ordinaries.flatMap((type) => [...countsFor('field', type).map((count) => ({ field: { kind: 'plain', tincture: 'gules' }, ordinary: { type, tincture: 'or' }, charges: { charge: 'mullet', count, tincture: 'argent' } })), ...countsFor('ordinary', type).map((count) => ({ field: { kind: 'plain', tincture: 'gules' }, ordinary: { type, tincture: 'or' }, onOrdinary: { charge: 'lion', count, tincture: 'sable' } }))]));
 section('Everything at once, on every shape', shapes.flatMap((shape) => [read('Per pale gules and azure, on a fess wavy argent between three crescents Or, three torteaux, on a chief ermine a lion passant gules, a bordure engrailed Or', shape), read('Or, on a bend sable between six mullets gules, three bezants, on a chief azure three fleurs-de-lis Or', shape), read('Argent, on a cross gules between four eagles displayed sable, five plates, a bordure azure', shape), read('Vert, on a chevron embattled Or between three lions rampant argent, five hurts', shape)]));
@@ -40,7 +41,7 @@ it('writes the contact sheet', () => {
   mkdirSync(new URL('../sheet/', import.meta.url), { recursive: true });
   writeFileSync(new URL('../sheet/index.html', import.meta.url), html);
   // The beasts on their own, large, for drawing them.
-  const big = ['Azure, a lion rampant Or', 'Gules, a lion passant Or', 'Or, an eagle displayed sable', 'Azure, a fleur-de-lis Or', 'Or, an emu proper'].map((text) => read(text, 'roundel'));
+  const big = ['Or, an eagle displayed sable', 'Azure, an eagle displayed Or', 'Gules, an eagle rising argent', 'Or, an eagle rising sable', 'Vert, a lion courant Or', 'Azure, three eagles displayed Or'].map((text) => read(text));
   writeFileSync(new URL('../sheet/art.html', import.meta.url), `${html.slice(0, html.indexOf('<h2>')).replace('width:150px', 'width:400px')}<div>${big.map((arms) => `<figure>${armsSvg(arms, { bare: true })}</figure>`).join('')}</div>`);
   // And one page per section, small enough to take a picture of.
   const head = html.slice(0, html.indexOf('<h2>'));

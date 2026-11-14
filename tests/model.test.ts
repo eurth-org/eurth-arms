@@ -69,6 +69,9 @@ describe('cleaning', () => {
     const one = (charge: string, extra = {}) => cleanArms({ field: {}, charges: { charge, count: 3, tincture: 'or', points: 6, attitude: 'passant', arrangement: 'inPale', ...extra } }).charges!;
     expect(one('mullet')).toEqual({ charge: 'mullet', count: 3, tincture: 'or', arrangement: 'inPale', points: 6 });
     expect(one('lion')).toEqual({ charge: 'lion', count: 3, tincture: 'or', arrangement: 'inPale', attitude: 'passant' });
+    expect(one('lion', { attitude: 'displayed' }).attitude).toBe('rampant');
+    expect(one('eagle').attitude).toBe('displayed');
+    expect(one('crescent').attitude).toBeUndefined();
     expect(one('crescent', { arrangement: 'inSaltire' }).arrangement).toBe('twoAndOne');
     expect(one('emu', { tincture: 'gules' }).tincture).toBe('proper');
     expect(one('lion', { tincture: 'proper' }).tincture).toBe('or');

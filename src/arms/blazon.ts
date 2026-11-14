@@ -10,7 +10,7 @@
  * parse.ts reads every one of these back to the arms it came from.
  */
 import { charge, roundelNames } from './catalogue';
-import { arrangementsFor, cleanArms, patternCounts, type Arms, type Arrangement, type ChargeGroup, type Division, type Edge, type Field, type Line, type OrdinaryType, type Pattern } from './model';
+import { arrangementsFor, cleanArms, names, patternCounts, type Arms, type Arrangement, type Attitude, type ChargeGroup, type Division, type Edge, type Field, type Line, type OrdinaryType, type Pattern } from './model';
 import { blazonName } from './tinctures';
 
 export const numberWords = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'] as const;
@@ -57,6 +57,9 @@ export const arrangementWords: Readonly<Record<Arrangement, string>> = {
   threeTwoOne: 'three, two and one',
 };
 
+/** An attitude as a blazon writes it: "passant guardant". */
+export const attitudeWord = (attitude: Attitude): string => names.attitude[attitude].toLowerCase();
+
 const lineWord = (line: Line): string => (line === 'straight' ? '' : ` ${line}`);
 
 /** "a mullet", "an eagle", "an hourglass". */
@@ -83,8 +86,7 @@ export function groupBlazon(group: ChargeGroup): string {
   const def = named ?? charge(group.charge);
   let words = group.count === 1 ? article(def.name) : `${numberWords[group.count]} ${def.plural}`;
   if (group.charge === 'mullet' && group.points && group.points !== 5) words += ` of ${numberWords[group.points]} points`;
-  if (group.charge === 'lion') words += ` ${group.attitude ?? 'rampant'}`;
-  if (group.charge === 'eagle') words += ' displayed';
+  if (group.attitude) words += ` ${attitudeWord(group.attitude)}`;
   // Two charges always say how they lie; more than two only when it isn't the usual way.
   if (group.arrangement && (group.count === 2 || group.arrangement !== arrangementsFor(group.count)[0])) {
     words += ` ${arrangementWords[group.arrangement]}`;

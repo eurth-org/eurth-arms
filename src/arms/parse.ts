@@ -8,8 +8,8 @@
  * it was written from.
  */
 import { charges as catalogue, roundelNames } from './catalogue';
-import { arrangementWords, numberWords, ordinaryWords } from './blazon';
-import { cleanArms, countsFor, type Arms, type Arrangement, type ChargeGroup, type Division, type Line, type OrdinaryType, type Pattern, type Place, type Shape } from './model';
+import { arrangementWords, attitudeWord, numberWords, ordinaryWords } from './blazon';
+import { attitudes, attitudesFor, cleanArms, countsFor, lionAttitudes, type Arms, type Arrangement, type Attitude, type ChargeGroup, type Division, type Line, type OrdinaryType, type Pattern, type Place, type Shape } from './model';
 import { tinctures, type Tincture, type TinctureId } from './tinctures';
 
 export interface ParseProblem {
@@ -147,11 +147,13 @@ const arrangementPhrases = phrases<Arrangement>([
   ['fesswise', 'inFess'],
 ]);
 
+const attitudePhrases = phrases<Attitude>(attitudes.map((attitude) => [attitudeWord(attitude), attitude]));
+
 /** Heraldry the tool knows of but can't draw yet: worth a kinder message than "unknown word". */
 const notYet = new Set(
   words(
     'sinister pall canton orle label tressure flaunches flanches gyronny lozengy fusil fusils billet billets escallop escallops martlet martlets ' +
-      'guardant regardant sejant statant couchant salient dormant rising nebuly dancetty raguly dovetailed invected counterchanged erminois pean ermines ' +
+      'regardant volant close nebuly dancetty raguly dovetailed invected counterchanged erminois pean ermines ' +
       'bar bars barrulet pallet pallets bendlet bendlets chevronel chevronels chevrons bends pales piles crosses saltires estoile estoiles rose roses ' +
       'impaled impaling dimidiated overall surmounted debruised fimbriated cotised voided couped',
   ),
@@ -178,8 +180,12 @@ class Parser {
     return true;
   }
 
+  private findPhrase<T>(list: Phrase<T>[]): Phrase<T> | undefined {
+    return list.find((p) => p.words.every((word, i) => this.peek(i) === word));
+  }
+
   private eatPhrase<T>(list: Phrase<T>[]): T | undefined {
-    const found = list.find((p) => p.words.every((word, i) => this.peek(i) === word));
+    const found = this.findPhrase(list);
     if (found) this.pos += found.words.length;
     return found?.value;
   }
@@ -354,21 +360,22 @@ class Parser {
       const word = this.peek();
       if (word === undefined) break;
       const arrangement = this.eatPhrase(arrangementPhrases);
+      const attitude = arrangement ? undefined : this.findPhrase(attitudePhrases);
       if (arrangement) {
         group.arrangement = arrangement;
+      } else if (attitude) {
+        if (!attitudesFor(found.charge).includes(attitude.value)) {
+          const beast = (lionAttitudes as readonly string[]).includes(attitude.value) ? 'a lion' : 'an eagle';
+          this.fail(`Only ${beast} can be ${attitudeWord(attitude.value)} here.`);
+        }
+        group.attitude = attitude.value;
+        this.pos += attitude.words.length;
       } else if (word === 'of' && this.peek(2) === 'points') {
         const points = numbers.get(this.peek(1)!);
         if (found.charge !== 'mullet') this.fail(`Only a mullet has a number of points here, not ${found.name === 'emu' ? 'an emu' : `a ${found.name}`}.`);
         if (points !== 5 && points !== 6 && points !== 8) this.fail('A mullet has five, six or eight points here.', 1);
         group.points = points;
         this.pos += 3;
-      } else if (word === 'rampant' || word === 'passant') {
-        if (found.charge !== 'lion') this.fail(`Only a lion can be ${word} here.`);
-        group.attitude = word;
-        this.pos++;
-      } else if (word === 'displayed') {
-        if (found.charge !== 'eagle') this.fail('Only an eagle can be displayed here.');
-        this.pos++;
       } else if (tincture === undefined && (word === 'proper' || tinctureWords.has(word) || (word === 'of' && this.peek(1) === 'the'))) {
         if (word === 'proper' && found.charge !== 'emu') this.fail(`Only the emu comes "proper" here: give the ${found.name} a tincture.`);
         tincture = this.tincture();

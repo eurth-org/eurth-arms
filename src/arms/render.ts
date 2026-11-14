@@ -8,6 +8,8 @@
  * the chief and its charges, the bordure; all clipped to the shield, whose outline is drawn
  * last.
  */
+import { beastCredits, beasts } from './beasts';
+import type { BeastCredit } from './beasts/types';
 import { blazon } from './blazon';
 import { drawnArt } from './charges';
 import { describeArms } from './describe';
@@ -47,8 +49,55 @@ const furs: Readonly<Record<string, () => string>> = {
   },
 };
 
+/** The beast drawing for a charge in its attitude: "lion-passant-guardant". */
+const beastId = (group: ChargeGroup): string => `${group.charge}-${(group.attitude ?? '').replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`;
+
+/** The drawings from Wikimedia Commons a design uses, for giving credit where it is shown or saved. */
+export function creditsFor(design: Arms): BeastCredit[] {
+  const arms = cleanArms(design);
+  const found = new Map<string, BeastCredit>();
+  for (const group of [arms.charges, arms.onOrdinary, arms.onChief]) {
+    const credit = group ? beastCredits[beastId(group)] : undefined;
+    if (credit) found.set(credit.title, credit);
+  }
+  return [...found.values()];
+}
+
+/** One line of credit for a picture: who drew its beasts, and under which licence. */
+export function creditLine(design: Arms): string {
+  return creditsFor(design)
+    .map((c) => `"${c.title.replace(/\.svg$/, '')}" by ${c.author}, from Wikimedia Commons, ${c.licence === 'Public domain' ? 'public domain' : `${c.licence} (${c.licenceUrl})`}, recoloured.`)
+    .join(' ');
+}
+
 class Picture {
   private used = new Set<string>();
+  private beasts = new Map<string, string>();
+
+  /**
+   * A beast in a tincture, defined once and used wherever it stands. Its id says what it is
+   * and how it is painted, so the same id on another picture on the page is the same drawing.
+   */
+  beast(id: string, worn: Tincture): string {
+    const key = `arms-${id}-${worn}`;
+    if (!this.beasts.has(key)) {
+      const roles: Record<string, string> = {
+        B: this.paint(worn),
+        // Claws, teeth and eyes stay pale; the tongue is red, or blue on a red beast, as heralds paint it.
+        W: worn === 'argent' ? '#ffffff' : tincture('argent').paint,
+        T: worn === 'gules' ? tincture('azure').paint : tincture('gules').paint,
+        // A black beast is drawn with pale lines, or nothing of it could be seen.
+        K: worn === 'sable' ? '#b9b9b9' : OUTLINE,
+      };
+      const body = beasts[id]!.body.replace(/%([BWTK])/g, (_, role: string) => roles[role]!);
+      this.beasts.set(key, `<g id="${key}" fill="none" fill-rule="evenodd" stroke="${roles.K}" stroke-width="2.5" stroke-linejoin="round">${body}</g>`);
+    }
+    return key;
+  }
+
+  get linked(): boolean {
+    return this.beasts.size > 0;
+  }
 
   paint(t: Tincture): string {
     if (t === 'proper') return OUTLINE;
@@ -60,11 +109,24 @@ class Picture {
   }
 
   defs(shape: Shape): string {
-    return `<defs><clipPath id="arms-clip-${shape}"><path d="${shield(shape).d}"/></clipPath>${[...this.used].map((fur) => furs[fur]!()).join('')}</defs>`;
+    const made = [...this.beasts.values()].join('');
+    return `<defs><clipPath id="arms-clip-${shape}"><path d="${shield(shape).d}"/></clipPath>${[...this.used].map((fur) => furs[fur]!()).join('')}${made}</defs>`;
   }
 }
 
 function chargeSvg(group: ChargeGroup, slots: Slot[], picture: Picture): string {
+  const beast = beasts[beastId(group)];
+  if (beast) {
+    const id = picture.beast(beastId(group), group.tincture);
+    return slots
+      .map((slot) => {
+        // Fitted by its diagonal, and a little over: a beast never fills the corners of its drawing.
+        const k = Math.max(0.001, Math.round(((2.5 * slot.r) / Math.hypot(beast.w, beast.h)) * 10000) / 10000);
+        const turn = slot.rot ? ` rotate(${f(slot.rot)})` : '';
+        return `<use href="#${id}" xlink:href="#${id}" transform="translate(${f(slot.x)} ${f(slot.y)})${turn} scale(${k}) translate(${f(-beast.w / 2)} ${f(-beast.h / 2)})"/>`;
+      })
+      .join('');
+  }
   const drawn = drawnArt(group.charge, group);
   const icon = drawn ? undefined : modernArt(group.charge);
   if (!drawn && !icon) return '';
@@ -129,9 +191,13 @@ export function armsSvg(design: Arms, options: RenderOptions = {}): string {
 
   const text = blazon(arms);
   const label = options.bare ? ' aria-hidden="true"' : ` role="img" aria-label="${esc(text)}"`;
-  const words = options.bare ? '' : `<title>${esc(text)}</title><desc>${esc(describeArms(arms))}</desc>`;
+  // A saved picture says who drew its beasts: their licence asks for it.
+  const credit = creditLine(arms);
+  const words = options.bare ? '' : `<title>${esc(text)}</title><desc>${esc(describeArms(arms))}${credit ? ` ${esc(credit)}` : ''}</desc>`;
+  const defs = picture.defs(arms.shape);
+  const xlink = picture.linked ? ' xmlns:xlink="http://www.w3.org/1999/xlink"' : '';
   return (
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${WIDTH} ${HEIGHT}"${label}>${words}${picture.defs(arms.shape)}` +
+    `<svg xmlns="http://www.w3.org/2000/svg"${xlink} viewBox="0 0 ${WIDTH} ${HEIGHT}"${label}>${words}${defs}` +
     `<g clip-path="url(#arms-clip-${arms.shape})">${body}</g>` +
     `<path d="${s.d}" fill="none" stroke="${OUTLINE}" stroke-width="6" stroke-linejoin="round"/></svg>`
   );

@@ -5,7 +5,7 @@
  * Used as the picture's description, for Copy description, and as the profile's summary.
  */
 import { charge } from './catalogue';
-import { arrangementsFor, cleanArms, type Arms, type Arrangement, type ChargeGroup, type Division, type Edge, type Field, type Line, type OrdinaryType } from './model';
+import { arrangementsFor, cleanArms, type Arms, type Arrangement, type Attitude, type ChargeGroup, type Division, type Edge, type Field, type Line, type OrdinaryType } from './model';
 import { plainName } from './tinctures';
 
 const numerals = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
@@ -63,6 +63,24 @@ const ordinaryWords: Readonly<Record<OrdinaryType, string>> = {
 
 const describeEdge = (edge: Edge, words: string): string => a(`${edged[edge.line]}${plainName(edge.tincture)} ${words}`);
 
+/** The beasts' attitudes in plain words: one beast, and several. */
+const stance: Readonly<Record<Attitude, [string, string]>> = {
+  rampant: ['rearing lion', 'rearing lions'],
+  rampantGuardant: ['rearing lion facing the viewer', 'rearing lions facing the viewer'],
+  passant: ['walking lion', 'walking lions'],
+  passantGuardant: ['walking lion facing the viewer', 'walking lions facing the viewer'],
+  statant: ['standing lion', 'standing lions'],
+  statantGuardant: ['standing lion facing the viewer', 'standing lions facing the viewer'],
+  salient: ['leaping lion', 'leaping lions'],
+  sejant: ['sitting lion', 'sitting lions'],
+  sejantErect: ['lion sitting upright', 'lions sitting upright'],
+  couchant: ['lion lying with its head raised', 'lions lying with their heads raised'],
+  dormant: ['sleeping lion', 'sleeping lions'],
+  courant: ['running lion', 'running lions'],
+  displayed: ['eagle with spread wings', 'eagles with spread wings'],
+  rising: ['eagle taking flight', 'eagles taking flight'],
+};
+
 /** A charge in plain words: one of it, and several. */
 function chargeWords(group: ChargeGroup): [string, string] {
   switch (group.charge) {
@@ -77,9 +95,9 @@ function chargeWords(group: ChargeGroup): [string, string] {
     case 'fleurDeLis':
       return ['fleur-de-lis', 'fleurs-de-lis'];
     case 'lion':
-      return group.attitude === 'passant' ? ['walking lion', 'walking lions'] : ['rearing lion', 'rearing lions'];
+      return stance[group.attitude ?? 'rampant'];
     case 'eagle':
-      return ['eagle with spread wings', 'eagles with spread wings'];
+      return stance[group.attitude ?? 'displayed'];
     default: {
       const def = charge(group.charge);
       return [def.name, def.plural];

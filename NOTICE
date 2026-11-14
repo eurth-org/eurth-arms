@@ -1,0 +1,18 @@
+Arms
+Copyright 2026 Eurth
+
+The code in this repository is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Not everything in it is code, and not everything is ours:
+
+- The heraldic lions in art/commons/ and src/arms/beasts/lion-*.ts are by Sodacan, from
+  Wikimedia Commons, and are licensed under the Creative Commons Attribution-ShareAlike 3.0
+  Unported licence (https://creativecommons.org/licenses/by-sa/3.0/). They have been
+  recoloured. Pictures made with them are under the same licence.
+- The heraldic eagles in art/commons/ and src/arms/beasts/eagle-*.ts are in the public
+  domain: one by Madboy74, one after Arthur Charles Fox-Davies, A Complete Guide to Heraldry
+  (1909), both from Wikimedia Commons.
+- The modern charges are icons from Font Awesome Free (https://fontawesome.com), licensed
+  under CC BY 4.0.
+
+art/commons/README.md lists every file, its author and its licence.
