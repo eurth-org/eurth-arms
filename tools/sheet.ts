@@ -39,6 +39,9 @@ it('writes the contact sheet', () => {
     .join('')}`;
   mkdirSync(new URL('../sheet/', import.meta.url), { recursive: true });
   writeFileSync(new URL('../sheet/index.html', import.meta.url), html);
+  // The beasts on their own, large, for drawing them.
+  const big = ['Azure, a lion rampant Or', 'Gules, a lion passant Or', 'Or, an eagle displayed sable', 'Azure, a fleur-de-lis Or', 'Or, an emu proper'].map((text) => read(text, 'roundel'));
+  writeFileSync(new URL('../sheet/art.html', import.meta.url), `${html.slice(0, html.indexOf('<h2>')).replace('width:150px', 'width:400px')}<div>${big.map((arms) => `<figure>${armsSvg(arms, { bare: true })}</figure>`).join('')}</div>`);
   // And one page per section, small enough to take a picture of.
   const head = html.slice(0, html.indexOf('<h2>'));
   sections.forEach(([title, list], i) => {

@@ -255,43 +255,57 @@ function roomAt(p: Pt, region: Region): number {
 
 const directions: Pt[] = [[0, -1], [0, 1], [-1, 0], [1, 0], [-S, -S], [S, -S], [-S, S], [S, S]];
 
-/** From its traditional spot, a charge moves a little way towards more room, until it has what it wants. */
-function settle(ideal: Pt, want: number, region: Region, reach: number): { p: Pt; room: number } {
-  let p = ideal;
-  let room = roomAt(p, region);
-  for (const step of [24, 12, 6, 3, 1.5]) {
-    for (let i = 0; i < 8 && room < want; i++) {
-      let best: { p: Pt; room: number } | undefined;
-      for (const direction of directions) {
-        const q = add(p, direction, step);
-        if (dist(q, ideal) > reach) continue;
-        const r = roomAt(q, region);
-        if (r > (best?.room ?? room) + 1e-6) best = { p: q, room: r };
-      }
-      if (!best) break;
-      ({ p, room } = best);
-    }
-  }
-  return { p, room };
-}
-
 /** The radius a charge is given when it has all the room it could want, by how many share the place. */
 const WANT = [0, 200, 112, 96, 84, 74, 66];
 
+/**
+ * From their traditional spots, charges move a little way towards more room, until each has
+ * what it wants or can find no better. Room is what the region leaves and what the
+ * neighbours leave, so two charges looking for space never crowd into the same gap. Shapes
+ * are symmetrical: a charge on the right that has a twin on the left simply mirrors it, and a
+ * charge on the middle line stays on it.
+ */
 function place(ideals: Pt[], want: number, region: Region, cx: number, mirror: boolean, reach: number, rot = 0): Slot[] {
-  const settled = ideals.map((ideal) => {
-    // Shapes are symmetrical, so the right-hand charges are settled as their mirror images:
-    // a pair then always ends up a true pair.
-    const flip = mirror && ideal[0] > cx + 0.5;
-    const found = settle(flip ? [2 * cx - ideal[0], ideal[1]] : ideal, want, region, reach);
-    return { p: (flip ? [2 * cx - found.p[0], found.p[1]] : found.p) as Pt, room: found.room };
-  });
-  let r = Math.min(want, ...settled.map((spot) => spot.room));
-  for (let i = 0; i < settled.length; i++) {
-    for (let j = i + 1; j < settled.length; j++) r = Math.min(r, dist(settled[i]!.p, settled[j]!.p) / 2 - GAP / 2);
+  const across = (p: Pt): Pt => [2 * cx - p[0], p[1]];
+  const twin = ideals.map((p, i) => (mirror && p[0] > cx + 0.5 ? ideals.findIndex((q, j) => j !== i && dist(q, across(p)) < 0.5) : -1));
+  const spots = ideals.slice();
+
+  const roomFor = (i: number, p: Pt): number => {
+    let room = roomAt(p, region);
+    for (let j = 0; j < spots.length; j++) {
+      if (j === i) continue;
+      const other = twin[j] === i ? across(p) : spots[j]!;
+      room = Math.min(room, dist(p, other) / 2 - GAP / 2);
+    }
+    return room;
+  };
+
+  for (let round = 0; round < 3; round++) {
+    for (let i = 0; i < spots.length; i++) {
+      if (twin[i]! >= 0) continue;
+      const onAxis = mirror && Math.abs(ideals[i]![0] - cx) < 0.5;
+      let p = spots[i]!;
+      let room = roomFor(i, p);
+      for (const step of [24, 12, 6, 3, 1.5]) {
+        for (let tries = 0; tries < 8 && room < want; tries++) {
+          let best: { p: Pt; room: number } | undefined;
+          for (const direction of onAxis ? directions.slice(0, 2) : directions) {
+            const q = add(p, direction, step);
+            if (dist(q, ideals[i]!) > reach) continue;
+            const r = roomFor(i, q);
+            if (r > (best?.room ?? room) + 1e-6) best = { p: q, room: r };
+          }
+          if (!best) break;
+          ({ p, room } = best);
+        }
+      }
+      spots[i] = p;
+      for (let j = 0; j < spots.length; j++) if (twin[j] === i) spots[j] = across(p);
+    }
   }
-  r = Math.max(6, r);
-  return settled.map(({ p }) => ({ x: p[0], y: p[1], r, rot }));
+
+  const r = Math.max(6, Math.min(want, ...spots.map((p, i) => roomFor(i, p))));
+  return spots.map((p) => ({ x: p[0], y: p[1], r, rot }));
 }
 
 export function slotsOf(arms: Arms): Slots {

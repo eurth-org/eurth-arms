@@ -75,44 +75,49 @@ const eagle: Art = [
 ];
 
 const lionRampant: Art = [
-  // The tail: up behind the back, curling over, with a tuft.
-  { d: 'M62 66C74 68 86 60 85 48C84 38 76 34 77 26C78 21 83 20 86 23C89 14 81 9 74 13C66 19 68 30 74 40C78 48 74 58 62 60Z' },
-  // The body, rearing.
-  { d: 'M34 30C44 22 58 28 64 42C70 56 70 68 62 76C54 80 44 72 40 60C36 48 30 38 34 30Z' },
+  // The tail: out behind the back and up in an S, ending in a tuft.
+  { d: 'M66 62C74 64 82 60 84 52C86 44 80 38 80 30C80 24 83 20 87 20L86 24C84 24 84 27 84 30C84 36 90 42 88 52C86 62 76 68 66 68Z' },
+  { d: 'M87 20C90 14 96 14 98 18C94 18 94 22 96 26C92 26 88 24 86 24Z' },
+  // The body, rearing: a deep chest, a narrow waist.
+  { d: 'M50 23C57 26 62 33 63 42C63 48 62 52 64 57C67 62 70 68 67 76C64 82 56 80 54 73C53 67 52 62 49 58C45 54 38 52 34 46C30 40 31 32 36 27C40 24 46 22 50 23Z' },
   // The far hind leg, planted.
-  { d: 'M54 66C62 70 64 80 60 87L62 93L64 97L44 97L43 92L52 90C54 84 50 78 46 72Z' },
+  { d: 'M60 72C66 76 68 82 65 88L64 92L68 96L52 97L48 94L55 92L58 90C59 86 57 82 53 78Z' },
   // The near hind leg, stepping forward.
-  { d: 'M46 64C40 72 34 77 27 77L22 73L23 79L17 79L22 83L19 88L27 86C36 86 46 82 54 74Z' },
+  { d: 'M56 66C50 70 44 76 36 78L31 78L26 74L26 80L20 80L24 85L20 89L28 88L32 86C42 86 52 82 60 74Z' },
   // The upper forepaw, raised to strike.
-  { d: 'M40 33C32 31 22 28 14 25L10 20L11 27L5 27L10 31L6 35L14 35C22 38 32 41 40 43Z' },
+  { d: 'M41 29C34 27 27 24 20 19L17 13L15 19L9 17L13 22L7 25L15 26L16 27C23 31 31 35 39 37Z' },
   // The lower forepaw.
-  { d: 'M42 45C34 47 26 49 18 49L13 45L14 51L8 52L14 56L11 61L19 58C28 58 36 56 45 54Z' },
-  // The head and mane.
-  { d: 'M42 31C35 32 28 28 26 21C24 13 29 6 37 5C46 4 53 11 52 20C51 26 48 30 42 31Z' },
-  // The ear.
-  { d: 'M40 7L45 0L48 9Z' },
-  // The open jaws.
-  { d: 'M29 14L15 14L21 19L14 23L26 26L32 21Z' },
+  { d: 'M39 38C32 40 25 40 19 38L14 33L13 39L7 38L11 43L6 47L14 46L16 46C24 48 33 48 41 46Z' },
+  // The mane: tufts down the neck and on the chest.
+  { d: 'M46 12L55 13L50 18L58 21L51 24L58 29L50 30L46 28Z' },
+  { d: 'M33 30L26 33L32 35L26 39L33 40L29 45L36 44Z' },
+  // The head, jaws open.
+  { d: 'M47 24C49 18 47 10 41 7C36 5 30 6 27 10L18 11L22 15L26 15L23 18L17 21L26 23C28 26 32 28 36 28C40 28 45 27 47 24Z' },
+  // The ear and the tongue.
+  { d: 'M40 8L42 1L47 9Z' },
+  { d: 'M24 16C20 16 17 17 15 19C19 19 22 18 25 18Z' },
 ];
 
 const lionPassant: Art = [
-  // The tail, curved over the back.
-  { d: 'M80 44C89 40 95 32 93 24C92 18 87 16 83 19C81 11 89 7 95 12C101 18 101 34 93 44C89 50 85 52 80 52Z' },
+  // The tail, curved over the back, ending in a tuft.
+  { d: 'M84 44C90 40 94 34 92 26C91 21 86 18 82 20L83 24C86 23 88 25 88 28C89 34 86 38 80 42Z' },
+  { d: 'M82 20C78 16 72 17 70 21C74 21 76 24 75 28C79 27 82 25 83 24Z' },
   // The body, level.
-  { d: 'M20 38C34 32 62 32 78 38C86 44 86 58 78 62C62 67 36 66 24 61C16 55 15 45 20 38Z' },
+  { d: 'M24 40C30 34 40 34 50 36C60 38 70 36 78 38C85 40 88 48 86 56C84 62 76 62 70 60C62 58 56 60 48 62C40 64 30 64 25 58C20 52 20 44 24 40Z' },
   // The far foreleg, down.
-  { d: 'M32 58L44 60L42 79L45 86L30 86L29 81L34 79Z' },
+  { d: 'M34 58L41 60L40 78L43 80L46 86L32 86L30 82L35 80Z' },
   // The near foreleg, raised.
-  { d: 'M27 55C22 60 16 62 10 60L5 56L6 62L1 64L6 67L4 72L12 69C20 69 28 66 36 60Z' },
+  { d: 'M30 54C26 58 22 62 16 62L11 58L11 64L5 64L9 69L5 73L13 72L15 70C22 70 30 66 36 60Z' },
   // The hind legs, striding.
-  { d: 'M60 60L72 62L68 79L71 86L56 86L55 81L61 79Z' },
-  { d: 'M72 56C82 58 87 66 84 75L87 86L72 86L71 81L77 79C78 72 75 66 68 62Z' },
-  // The head and mane.
-  { d: 'M26 46C17 47 9 42 8 33C7 24 13 17 22 17C31 17 37 24 36 33C35 41 32 45 26 46Z' },
-  // The ear.
-  { d: 'M23 18L27 10L31 19Z' },
-  // The open jaws.
-  { d: 'M10 27L0 28L4 32L0 36L9 38L15 33Z' },
+  { d: 'M68 58L76 60L73 78L76 80L79 86L64 86L63 82L68 80Z' },
+  { d: 'M78 54C85 58 90 64 88 72L88 80L92 86L78 86L76 82L82 80C83 74 80 68 74 62Z' },
+  // The mane.
+  { d: 'M26 26L34 27L30 32L37 35L31 38L36 43L28 43Z' },
+  // The head, jaws open.
+  { d: 'M27 40C30 34 28 26 22 23C17 21 12 22 9 26L1 27L5 31L9 31L6 34L1 37L9 39C11 42 15 44 19 44C23 44 26 42 27 40Z' },
+  // The ear and the tongue.
+  { d: 'M21 23L23 16L28 24Z' },
+  { d: 'M7 32C4 32 1 33 0 35C3 35 6 34 8 34Z' },
 ];
 
 /** The emu, proper: brown plumage, a blue-grey neck, dark legs and beak. */
