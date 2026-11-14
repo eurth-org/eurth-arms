@@ -6,11 +6,11 @@ Three parts: what comes next, what each release added (newest first), and what's
 
 ## Where to pick up
 
-**14 November 2026.** Stijn approved the plan and Phase 1 is under way. Done: steps 1 to 4 (tinctures, the model, writing the blazon, reading it back), with tests (`npm test`, `npm run check`). Step 5 (the tincture check and its one-click fixes) is done too. The next step is Phase 1, step 6, drawing. The guide and glossary (steps 11 and 12) are being written alongside.
+**15 November 2026.** Phase 1 is under way. Done, with tests (`npm test`, `npm run check`): steps 1 to 5 (tinctures, the model, writing the blazon, reading it back, the tincture check and its fixes). In progress: step 6, drawing: every module is written (`geometry`, `shapes`, `lines`, `layout`, `charges`, `modern`, `render`) and `npm run sheet` writes a contact sheet to `sheet/`, but the pictures have not been checked by eye yet and have no tests; step 7 (`describe.ts`) is written and untested; step 11, the guide: pages 1 to 4 of 8 are drafted and unreviewed, pages 5 to 8 (blazon, marshalling, cadency, designing) and the glossary (step 12) are not written, so `tests/content.test.ts` fails until they are. Next: check the contact sheet and fix the drawing, test it, then steps 8 to 10, then finish 11 and 12.
 
 Waiting on others:
 
-- **@eurth/style 1.0.0** is not released: no tag, no release, and no HANDBOOK.md on GitHub yet (the handbook's rules were read from the Foundations brief, and a starter template exists in the local checkout but isn't pushed). Phase 2 can't start until it is: check `gh release list -R eurth-org/eurth-style`.
+- **@eurth/style 1.0.1 is released** (1.0.0 and 1.0.1, on 14 November), so Phase 2 can start as soon as Phase 1 is done. Read its HANDBOOK.md and copy its starter template first.
 - **@eurth/profile 1.0.0** is written but not tagged. Its `arms` section already holds what the brief asks for: `link`, `summary`, `updated`, `svg` (at most 512 KB) and `blazon` (at most 400 characters). Nothing to ask of Foundations.
 
 Questions for Stijn (the plan assumes the first answer to each):
