@@ -10,7 +10,7 @@
   "scripts": {
     "check": "tsc --noEmit",
     "test": "vitest run",
-    "sheet": "node --experimental-strip-types tools/sheet.ts"
+    "sheet": "vitest run --config vitest.sheet.config.ts"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^7.3.1"
