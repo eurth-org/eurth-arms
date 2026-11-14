@@ -1,0 +1,23 @@
+{
+  "name": "eurth-arms",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Arms: a free online coat-of-arms maker that follows the rules of heraldry, by Eurth.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "vitest run",
+    "sheet": "node --experimental-strip-types tools/sheet.ts"
+  },
+  "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^7.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.1.0"
+  }
+}
