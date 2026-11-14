@@ -6,7 +6,7 @@ Three parts: what comes next, what each release added (newest first), and what's
 
 ## Where to pick up
 
-**14 November 2026.** Stijn approved the plan and Phase 1 is under way. Done: steps 1 to 4 (tinctures, the model, writing the blazon, reading it back), with tests (`npm test`, `npm run check`). The next step is Phase 1, step 5, the tincture check.
+**14 November 2026.** Stijn approved the plan and Phase 1 is under way. Done: steps 1 to 4 (tinctures, the model, writing the blazon, reading it back), with tests (`npm test`, `npm run check`). Step 5 (the tincture check and its one-click fixes) is done too. The next step is Phase 1, step 6, drawing. The guide and glossary (steps 11 and 12) are being written alongside.
 
 Waiting on others:
 
