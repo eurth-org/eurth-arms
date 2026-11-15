@@ -6,7 +6,7 @@ Three parts: what comes next, what each release added (newest first), and what's
 
 ## Where to pick up
 
-**15 November 2026.** Phase 1 is finished, and Phase 2 has begun: the site is scaffolded from @eurth/style's starter (1.1.0), and the guide (an index and eight pages), the glossary, the templates and a start page without the maker are built and pass the handbook's suites (185 tests; `npm run check`, `npm run build`, `npm test`, in that order). **Next: Phase 2, step 15, the maker** (`src/ui/Maker.svelte`, to be placed on `src/pages/index.astro` above "How it works"). Astro 7 needs Node 22.23 or newer: on Stijn's machine that is `/opt/homebrew/bin/node` (26), which must come first on the PATH.
+**15 November 2026.** Phase 1 is finished and most of Phase 2 is built: the site is scaffolded from @eurth/style's starter (1.1.0); the guide, the glossary and the templates are pages; and the maker works (`src/ui/Maker.svelte`): Simple and Advanced, Random, undo and redo, the live blazon, a typed blazon drawn, the tincture check with its fixes, the link, the share row, SVG, PNG and WebP downloads, the profile buttons, the credit notice for lions, the drop and the emu. 187 tests pass (`npm run check`, `npm run build`, `npm test`, in that order). **Next: Phase 2, step 19 onwards:** `npm run images` (the favicon, icons and sharing image are still the starter's), `npm run axe` and `npm run smoke` (both need Google Chrome and have not been run), a look at every page in both themes and at phone width, and the handbook's checklist. Astro 7 needs Node 22.23 or newer: on Stijn's machine that is `/opt/homebrew/bin/node` (26), which must come first on the PATH.
 
 What a new session should know:
 
@@ -29,7 +29,7 @@ Answered by Stijn, or settled by the brief:
 
 ### Phase 2: the site
 
-Done so far: step 13 (the starter, renamed), and of step 14 every page but the maker's own part of the start page. The guide's Markdown is read by `src/lib/guide.ts`; every figure is a file under `/figures/`, made at build time (`src/lib/figures.ts`).
+Done so far: steps 13 to 18, and the workflows of step 20 (copied from the starter, with the cron set for 9 December). Not yet run or checked: steps 19 and 21. The guide's Markdown is read by `src/lib/guide.ts`; every figure is a file under `/figures/`, made at build time (`src/lib/figures.ts`).
 
 13. Start from the starter template in eurth-style; read HANDBOOK.md first, and where it differs from this plan or from Flagwright, the handbook wins. Known differences from Flagwright already: the design lives in the query string, not after the `#`; nothing is saved in the browser; the shell, tokens and theme switch come from @eurth/style.
 14. Pages: Maker, Guide (an index and the eight pages), Glossary, Templates, with titles ("Arms: free online coat-of-arms maker for worldbuilders"), descriptions, canonical links, JSON-LD (WebApplication, BreadcrumbList, DefinedTermSet, Organization), sitemap.xml, robots.txt, llms.txt and Open Graph images.

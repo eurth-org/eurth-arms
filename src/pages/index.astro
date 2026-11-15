@@ -7,6 +7,7 @@ import { site } from '../../eurth.config.mjs';
 import { footerCredit } from '../arms/credits';
 import { templates } from '../arms/templates';
 import { figureAlt, figureSrc, HEIGHT, WIDTH } from '../lib/figures';
+import Maker from '../ui/Maker.svelte';
 
 const faq = [
   { q: 'Is Arms free?', a: 'Yes. There is no account, no watermark and no paid tier. It is made by the Eurth worldbuilding community for anyone who needs a coat of arms for a country, a house or a city that doesn’t exist.' },
@@ -26,6 +27,9 @@ const shown = templates.slice(0, 6);
       <h1>Design arms that follow the rules</h1>
       <p class="eu-lead">Pick a shield, a field, an ordinary and a charge. Arms writes the blazon, checks the rule of tincture and draws the result. Free, in your browser, no account needed.</p>
     </header>
+
+    <!-- client:load draws the maker as real HTML first, then wakes it up. -->
+    <Maker client:load siteName={site.name} siteUrl={site.url} />
 
     <section class="eu-prose">
       <h2>How it works</h2>

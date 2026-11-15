@@ -20,5 +20,7 @@ export const site = defineSite({
     { href: '/glossary/', label: 'Glossary' },
   ],
   repo: 'https://github.com/eurth-org/eurth-arms',
+  // A charge lands on the shield with a soft knock, once sound is switched on.
+  sound: true,
   ogAlt: 'Arms, the coat-of-arms maker at arms.eurth.org: the Eurth yurt beside a blue shield with a gold chevron between three white stars.',
 });

@@ -176,6 +176,17 @@ describe('drawing arms', () => {
     }
   });
 
+  it('lets a newly placed charge settle with a small drop, in the preview only', () => {
+    const arms = read('Azure, on a chevron Or between three mullets argent, three torteaux');
+    expect(armsSvg(arms)).not.toContain('animate');
+    const dropped = armsSvg(arms, { settle: ['field'] });
+    expect(dropped.match(/<animateTransform /g)).toHaveLength(1);
+    expect(dropped).toContain('dur="0.4s"');
+    expect(armsSvg(arms, { settle: ['field', 'ordinary'] }).match(/<animateTransform /g)).toHaveLength(2);
+    // Nothing to drop where nothing lies.
+    expect(armsSvg(arms, { settle: ['chief'] })).toBe(armsSvg(arms));
+  });
+
   it('draws the same arms the same way every time', () => {
     const arms = read('Per pale gules and azure, on a fess wavy argent between three crescents Or, three torteaux');
     expect(armsSvg(arms)).toBe(armsSvg(cleanArms(JSON.parse(JSON.stringify(arms)))));

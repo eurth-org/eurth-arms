@@ -3,7 +3,7 @@ import { blazon } from '../src/arms/blazon';
 import { pickable } from '../src/arms/catalogue';
 import { checkTincture } from '../src/arms/check';
 import { describeArms } from '../src/arms/describe';
-import { compact, expand, LINK_VERSION, MAX_LINK, openLink } from '../src/arms/link';
+import { cleanName, compact, expand, LINK_VERSION, MAX_LINK, openLink } from '../src/arms/link';
 import { arrangements, attitudes, cleanArms, defaultArms, divisions, lines, ordinaries, patterns, shapes, type Arms } from '../src/arms/model';
 import { parseBlazon } from '../src/arms/parse';
 import { fromSection, HOME, LIMITS, toSection } from '../src/arms/profile';
@@ -190,6 +190,13 @@ describe('arms in a link', () => {
     expect(arrangements.join()).toBe('inPale,inFess,inBend,twoAndOne,oneAndTwo,twoAndTwo,inCross,inSaltire,threeTwoOne');
     expect(attitudes.join()).toBe('rampant,rampantGuardant,passant,passantGuardant,statant,statantGuardant,salient,sejant,sejantErect,couchant,dormant,courant,displayed,rising');
     expect(tinctureIds.join()).toBe('or,argent,gules,azure,vert,sable,purpure,ermine,vair');
+  });
+
+  it('cleans a name: plain text, one line, sixty characters', () => {
+    expect(cleanName('  House of   Maravel ')).toBe('House of Maravel ');
+    expect(cleanName('<b>Orioni</b>\n')).toBe('bOrioni/b');
+    expect(cleanName('x'.repeat(200))).toHaveLength(60);
+    expect(cleanName(42)).toBe('');
   });
 
   it('can carry a typed blazon instead', () => {

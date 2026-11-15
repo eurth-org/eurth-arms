@@ -98,6 +98,17 @@ export function expand(state: unknown): Arms {
   return cleanArms(base);
 }
 
+/** A name for the arms (a nation, a house): plain text, no markup, at most 60 characters. */
+export function cleanName(value: unknown): string {
+  return typeof value === 'string'
+    ? value
+        .replace(/[<>\u0000-\u001f\u007f]/g, '')
+        .replace(/\s+/g, ' ')
+        .trimStart()
+        .slice(0, 60)
+    : '';
+}
+
 export interface Opened {
   arms: Arms;
   /** Set when a blazon in the link couldn't be read; the arms are then the default ones. */

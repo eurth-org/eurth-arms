@@ -4,7 +4,7 @@
 
 Arms is a coat-of-arms maker that follows the rules of heraldry: it draws the shield, writes the blazon, reads a blazon you type, and tells you when you've put colour on colour. It is one of the free worldbuilding tools by [Eurth](https://eurth.org), a worldbuilding and roleplay community since 2004, and will live at arms.eurth.org. It is the sister tool of [Flagwright](https://flag.eurth.org).
 
-Status: the engine, the templates, the guide and the glossary are written and tested, and the site's pages are built. The maker itself is next. What's next, what each stage added and what's not planned is in the [roadmap](roadmap.md).
+Status: built, and waiting for its door. The engine, the maker, the guide, the glossary and the templates are written and tested; the last checks before launch are listed in the roadmap. What's next, what each stage added and what's not planned is in the [roadmap](roadmap.md).
 
 ## How it works
 
@@ -36,6 +36,8 @@ Status: the engine, the templates, the guide and the glossary are written and te
 | The templates | `src/arms/templates.ts` |
 | Who drew what, for the footer | `src/arms/credits.ts` |
 | The guide (eight pages) and the glossary | `src/content/` |
+| The maker: modes, history, link, typing a blazon, downloads, profile | `src/ui/Maker.svelte` |
+| Its parts: tincture swatches, one group of charges | `src/ui/Swatches.svelte`, `src/ui/GroupEditor.svelte` |
 | Reading the guide's Markdown; the figure files | `src/lib/guide.ts`, `src/lib/figures.ts` |
 | Pages: maker, guide, glossary, templates, 404, figures | `src/pages/` |
 | What the tool is called and where it lives | `eurth.config.mjs` |

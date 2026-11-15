@@ -17,7 +17,7 @@ import { describeArms } from './describe';
 import { f } from './geometry';
 import { bordureInner, chiefPiece, fieldPieces, frameOf, ordinaryPiece, slotsOf, type Slot } from './layout';
 import { loopPath, polygonPath } from './lines';
-import { cleanArms, type Arms, type ChargeGroup, type Shape } from './model';
+import { cleanArms, type Arms, type ChargeGroup, type Place, type Shape } from './model';
 import { modernArt } from './modern';
 import { HEIGHT, shield, WIDTH } from './shapes';
 import { tincture, type Tincture } from './tinctures';
@@ -163,7 +163,16 @@ function chargeSvg(group: ChargeGroup, slots: Slot[], picture: Picture): string 
 export interface RenderOptions {
   /** Leave out the title and description, for a picture that is labelled where it is shown. */
   bare?: boolean;
+  /**
+   * Charges that have just been placed, by where they lie: these settle onto the shield with a
+   * small drop when the picture is first shown. Only for the maker's own preview, and never
+   * when the visitor has asked for less motion; a saved picture holds still.
+   */
+  settle?: readonly Place[];
 }
+
+/** The drop: from a little above, a touch past, and home. Under half a second. */
+const DROP = '<animateTransform attributeName="transform" type="translate" values="0 -46;0 5;0 0" keyTimes="0;0.7;1" dur="0.4s" fill="freeze"/>';
 
 /** The arms as a complete SVG document, 600 by 720. */
 export function armsSvg(design: Arms, options: RenderOptions = {}): string {
@@ -190,12 +199,13 @@ export function armsSvg(design: Arms, options: RenderOptions = {}): string {
   const slots = slotsOf(arms);
   const ordinary = ordinaryPiece(arms);
   if (arms.ordinary && ordinary) body += `<path d="${polygonPath(ordinary.polygon, arms.ordinary.line, ordinary.fancy)}" fill="${picture.paint(arms.ordinary.tincture)}"/>`;
-  if (arms.charges) body += chargeSvg(arms.charges, slots.field, picture);
-  if (arms.onOrdinary) body += chargeSvg(arms.onOrdinary, slots.ordinary, picture);
+  const placed = (place: Place, svg: string): string => (svg && options.settle?.includes(place) ? `<g>${DROP}${svg}</g>` : svg);
+  if (arms.charges) body += placed('field', chargeSvg(arms.charges, slots.field, picture));
+  if (arms.onOrdinary) body += placed('ordinary', chargeSvg(arms.onOrdinary, slots.ordinary, picture));
 
   const chief = chiefPiece(arms);
   if (arms.chief && chief) body += `<path d="${polygonPath(chief.polygon, arms.chief.line, chief.fancy)}" fill="${picture.paint(arms.chief.tincture)}"/>`;
-  if (arms.onChief) body += chargeSvg(arms.onChief, slots.chief, picture);
+  if (arms.onChief) body += placed('chief', chargeSvg(arms.onChief, slots.chief, picture));
 
   if (arms.bordure) {
     const inner = loopPath(bordureInner(arms), arms.bordure.line);
