@@ -1,0 +1,91 @@
+---
+// One page of the guide: the text, its figures, its sources and the day it was last brought
+// up to date. Search engines get the breadcrumb and the article's date as structured data.
+import { article, ref } from '@eurth/style/build';
+import Page from '@eurth/style/components/Page.astro';
+import { site } from '../../../eurth.config.mjs';
+import Figures from '../../components/Figures.astro';
+import Inline from '../../components/Inline.astro';
+import { guidePages, longDate, type GuidePage } from '../../lib/guide';
+
+export function getStaticPaths() {
+  return guidePages.map((page) => ({ params: { slug: page.slug }, props: { page } }));
+}
+
+const { page } = Astro.props as { page: GuidePage };
+const path = `/guide/${page.slug}/`;
+const at = guidePages.findIndex((other) => other.slug === page.slug);
+const [before, after] = [guidePages[at - 1], guidePages[at + 1]];
+const firstFigures = page.blocks.findIndex((block) => block.type === 'figures');
+---
+
+<Page
+  site={site}
+  title={page.title}
+  description={page.description}
+  crumbs={[
+    { name: 'Guide', path: '/guide/' },
+    { name: page.title, path },
+  ]}
+  jsonld={[article(site, { headline: page.title, path, description: page.description, updated: page.updated })]}
+>
+  <article class="eu-prose">
+    <p class="eu-kicker"><a href="/guide/">Guide</a>, part {page.order} of {guidePages.length}</p>
+    <h1>{page.title}</h1>
+    {
+      page.blocks.map((block, i) =>
+        block.type === 'heading' && block.level === 2 ? (
+          <h2 id={block.id}>{block.text}</h2>
+        ) : block.type === 'heading' ? (
+          <h3 id={block.id}>{block.text}</h3>
+        ) : block.type === 'paragraph' ? (
+          <p class:list={{ 'eu-lead': i === 0 }}>
+            <Inline nodes={block.children} host={site.host} />
+          </p>
+        ) : block.type === 'list' && block.ordered ? (
+          <ol>
+            {block.items.map((item) => (
+              <li>
+                <Inline nodes={item} host={site.host} />
+              </li>
+            ))}
+          </ol>
+        ) : block.type === 'list' ? (
+          <ul>
+            {block.items.map((item) => (
+              <li>
+                <Inline nodes={item} host={site.host} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <Figures items={block.items} eager={i === firstFigures} />
+        )
+      )
+    }
+
+    <h2 id="sources">Sources</h2>
+    <ul>
+      {
+        page.sources.map((source) => (
+          <li>
+            {source.author}, {source.url ? <a href={ref(source.url, site.host)}><cite>{source.title}</cite></a> : <cite>{source.title}</cite>} ({source.year}).
+          </li>
+        ))
+      }
+    </ul>
+    <p class="eu-muted">Last updated <time datetime={page.updated}>{longDate(page.updated)}</time>.</p>
+
+    <nav class="eu-row turn" aria-label="More of the guide">
+      {before && <a class="eu-btn" href={`/guide/${before.slug}/`}>Before: {before.title}</a>}
+      {after && <a class="eu-btn" href={`/guide/${after.slug}/`}>Next: {after.title}</a>}
+      <a class="eu-btn eu-btn--primary" href="/">Open the maker</a>
+    </nav>
+  </article>
+</Page>
+
+<style>
+  .turn {
+    margin-top: var(--space-8);
+  }
+</style>

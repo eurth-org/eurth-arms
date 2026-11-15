@@ -1,0 +1,81 @@
+---
+// Templates: arms for nations that don't exist, each a link into the maker. The links are made
+// at build time with the same code the maker uses, so they can never drift apart.
+import { encodeState } from '@eurth/style';
+import Page from '@eurth/style/components/Page.astro';
+import { site } from '../../eurth.config.mjs';
+import { compact } from '../arms/link';
+import { templates } from '../arms/templates';
+import { figureAlt, figureArms, figureSrc, HEIGHT, WIDTH } from '../lib/figures';
+
+const link = (blazon: string, shape: (typeof templates)[number]['shape']): string => `/?d=${encodeState(compact(figureArms(blazon, shape)))}`;
+---
+
+<Page
+  site={site}
+  title="Coat-of-arms templates"
+  description={`${templates.length} ready-made coats of arms for fictional nations, each with its blazon and what it means. Open one in the maker and make it yours.`}
+  crumbs={[{ name: 'Templates', path: '/templates/' }]}
+>
+  <div class="eu-stack">
+    <header class="eu-prose">
+      <p class="eu-kicker">Templates</p>
+      <h1>Coat-of-arms templates</h1>
+      <p class="eu-lead">
+        {templates.length} arms for nations that don't exist, as somewhere to start. Open one in the <a href="/">maker</a> and change what you like; the
+        <a href="/guide/designing/">guide</a> says what makes arms last. Every one of them keeps the rule of tincture.
+      </p>
+    </header>
+    <ul class="gallery">
+      {
+        templates.map((t, i) => (
+          <li id={t.id}>
+            <a class="eu-card" href={link(t.blazon, t.shape)}>
+              <img src={figureSrc(t.blazon, t.shape)} alt={figureAlt(t.blazon, t.shape)} width={WIDTH} height={HEIGHT} loading={i < 4 ? 'eager' : 'lazy'} decoding="async" />
+              <h2>{t.nation}</h2>
+              <p class="eu-data">{t.blazon}</p>
+              <p>{t.meaning}</p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Page>
+
+<style>
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .gallery li {
+    scroll-margin-top: var(--space-8);
+  }
+
+  .gallery a {
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .gallery img {
+    display: block;
+    width: 70%;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .gallery h2 {
+    font: var(--type-heading);
+  }
+
+  .eu-data {
+    font: var(--type-data);
+    color: var(--ink-muted);
+  }
+</style>

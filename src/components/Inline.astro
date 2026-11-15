@@ -1,0 +1,38 @@
+---
+// A run of the guide's text: plain text, bold, and links. Links that leave the site carry
+// ?ref= as the handbook asks; the shell opens them in a new tab, except those to other Eurth tools.
+import { ref } from '@eurth/style/build';
+import type { Inline as Node } from '../lib/guide';
+
+interface Props {
+  nodes: Node[];
+  host: string;
+}
+
+const { nodes, host } = Astro.props;
+const eurth = (href: string): boolean => /^https:\/\/([a-z]+\.)?eurth\.org(\/|$)/.test(href);
+---
+
+{
+  nodes.map((node) =>
+    node.type === 'text' ? (
+      node.text
+    ) : node.type === 'strong' ? (
+      <strong>
+        <Astro.self nodes={node.children} host={host} />
+      </strong>
+    ) : node.href.startsWith('/') ? (
+      <a href={node.href}>
+        <Astro.self nodes={node.children} host={host} />
+      </a>
+    ) : eurth(node.href) ? (
+      <a href={ref(node.href, host)} data-same-tab>
+        <Astro.self nodes={node.children} host={host} />
+      </a>
+    ) : (
+      <a href={ref(node.href, host)}>
+        <Astro.self nodes={node.children} host={host} />
+      </a>
+    )
+  )
+}

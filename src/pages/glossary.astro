@@ -1,0 +1,120 @@
+---
+// The glossary: every term has an id to link to, a definition and, where it helps, a figure
+// drawn from a blazon. The whole set is given to search engines as a DefinedTermSet.
+import { definedTermSet } from '@eurth/style/build';
+import Page from '@eurth/style/components/Page.astro';
+import { site } from '../../eurth.config.mjs';
+import { glossary } from '../content/glossary';
+import { figureAlt, figureSrc, HEIGHT, WIDTH } from '../lib/figures';
+
+const byTerm = new Map(glossary.map((entry) => [entry.id, entry.term]));
+const letters = [...new Set(glossary.map((entry) => entry.term.charAt(0).toUpperCase()))];
+const description = `${glossary.length} heraldry terms explained in plain words, from achievement to wavy, most with a picture: the words the Arms maker and its guide use.`;
+---
+
+<Page
+  site={site}
+  title="Glossary of heraldry terms"
+  description={description}
+  crumbs={[{ name: 'Glossary', path: '/glossary/' }]}
+  jsonld={[definedTermSet(site, { name: 'Glossary of heraldry terms', path: '/glossary/', terms: glossary.map(({ id, term, definition }) => ({ id, term, definition })) })]}
+>
+  <article class="eu-stack">
+    <header class="eu-prose">
+      <p class="eu-kicker">Glossary</p>
+      <h1>Glossary of heraldry terms</h1>
+      <p class="eu-lead">
+        The {glossary.length} words Arms and its <a href="/guide/">guide</a> use, each in a sentence or two. Most come with a picture, drawn from the blazon under it
+        by the <a href="/">maker</a>.
+      </p>
+    </header>
+
+    <nav class="eu-row letters" aria-label="Jump to a letter">
+      {letters.map((letter) => <a class="eu-btn eu-btn--quiet" href={`#letter-${letter.toLowerCase()}`}>{letter}</a>)}
+    </nav>
+
+    {
+      letters.map((letter) => (
+        <section class="eu-stack" aria-labelledby={`letter-${letter.toLowerCase()}`}>
+          <h2 id={`letter-${letter.toLowerCase()}`}>{letter}</h2>
+          <dl class="terms">
+            {glossary
+              .filter((entry) => entry.term.charAt(0).toUpperCase() === letter)
+              .map((entry) => (
+                <div class="term" id={entry.id}>
+                  {entry.figure && (
+                    <img src={figureSrc(entry.figure, entry.shape)} alt={figureAlt(entry.figure, entry.shape)} width={WIDTH} height={HEIGHT} loading="lazy" decoding="async" />
+                  )}
+                  <div class="eu-stack words">
+                    <dt>{entry.term}</dt>
+                    <dd>{entry.definition}</dd>
+                    {entry.figure && <dd class="eu-data eu-muted">{entry.figure}</dd>}
+                    {entry.see?.length && (
+                      <dd class="eu-muted">
+                        See also{' '}
+                        {entry.see.map((id, i) => (
+                          <>
+                            {i > 0 && ', '}
+                            <a href={`#${id}`}>{byTerm.get(id)?.toLowerCase()}</a>
+                          </>
+                        ))}
+                        .
+                      </dd>
+                    )}
+                  </div>
+                </div>
+              ))}
+          </dl>
+        </section>
+      ))
+    }
+  </article>
+</Page>
+
+<style>
+  .letters {
+    gap: var(--space-1);
+  }
+
+  .terms {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-6) var(--space-8);
+    margin: 0;
+  }
+
+  .term {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+    scroll-margin-top: var(--space-8);
+  }
+
+  /* A term with no picture keeps its words in the same column as the others. */
+  .term > .words:first-child {
+    grid-column: 2;
+  }
+
+  .term img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .words {
+    gap: var(--space-1);
+  }
+
+  dt {
+    font: var(--type-heading);
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  .eu-data {
+    font: var(--type-data);
+  }
+</style>

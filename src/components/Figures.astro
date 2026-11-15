@@ -1,0 +1,84 @@
+---
+// A row of arms, each drawn from its blazon, with a caption and the blazon itself under it.
+// Each opens in the maker when clicked: every figure in the guide is a design you can take further.
+import { encodeState } from '@eurth/style';
+import { compact } from '../arms/link';
+import type { Shape } from '../arms/model';
+import { figureAlt, figureArms, figureSrc, HEIGHT, WIDTH } from '../lib/figures';
+
+interface Props {
+  items: { blazon: string; caption?: string; shape?: Shape }[];
+  /** The first figures on a page are loaded at once; the rest as they come into view. */
+  eager?: boolean;
+}
+
+const { items, eager = false } = Astro.props;
+const link = (blazon: string, shape: Shape = 'heater'): string => {
+  const state = compact(figureArms(blazon, shape));
+  return Object.keys(state).length ? `/?d=${encodeState(state)}` : '/';
+};
+---
+
+<ul class="figures">
+  {
+    items.map((item) => (
+      <li>
+        <figure>
+          <a href={link(item.blazon, item.shape)} aria-label={`Open in the maker: ${item.blazon}`}>
+            <img src={figureSrc(item.blazon, item.shape)} alt={figureAlt(item.blazon, item.shape)} width={WIDTH} height={HEIGHT} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+          </a>
+          <figcaption>
+            {item.caption && <span>{item.caption}</span>}
+            <span class="eu-data blazon">{item.blazon}</span>
+          </figcaption>
+        </figure>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--space-4);
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .figures li {
+    margin: 0;
+  }
+
+  figure {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+  }
+
+  a {
+    display: block;
+    border-radius: var(--radius-md);
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    font: var(--type-body-sm);
+  }
+
+  .blazon {
+    color: var(--ink-muted);
+  }
+</style>

@@ -1,0 +1,105 @@
+---
+// The guide's front page: its eight parts, each with what it covers, and the credits for the
+// pictures the tool draws with.
+import { ref } from '@eurth/style/build';
+import Page from '@eurth/style/components/Page.astro';
+import { site } from '../../../eurth.config.mjs';
+import { artCredits } from '../../arms/credits';
+import { figureAlt, figureSrc, HEIGHT, WIDTH } from '../../lib/figures';
+import { guidePages, longDate } from '../../lib/guide';
+
+const description = 'Heraldry for worldbuilders, in eight short parts: tinctures, divisions, ordinaries, charges, blazon, marshalling, cadency and designing arms for a nation.';
+const updated = guidePages.map((page) => page.updated).sort().at(-1) ?? '';
+const firstFigure = (page: (typeof guidePages)[number]) => page.blocks.flatMap((block) => (block.type === 'figures' ? block.items : [])).at(-1);
+---
+
+<Page site={site} title="A guide to heraldry for worldbuilders" description={description} crumbs={[{ name: 'Guide', path: '/guide/' }]}>
+  <div class="eu-stack">
+    <header class="eu-prose">
+      <p class="eu-kicker">Guide</p>
+      <h1>A guide to heraldry for worldbuilders</h1>
+      <p class="eu-lead">
+        Heraldry is a small set of rules that has produced eight centuries of arms. Learn the rules in eight short parts, each with sources, and every picture in
+        them opens in the <a href="/">maker</a>.
+      </p>
+    </header>
+
+    <ol class="parts">
+      {
+        guidePages.map((page) => {
+          const figure = firstFigure(page);
+          return (
+            <li>
+              <a class="eu-card part" href={`/guide/${page.slug}/`}>
+                {figure && <img src={figureSrc(figure.blazon, figure.shape)} alt={figureAlt(figure.blazon, figure.shape)} width={WIDTH} height={HEIGHT} loading="lazy" decoding="async" />}
+                <div class="eu-stack words">
+                  <p class="eu-kicker">Part {page.order}</p>
+                  <h2>{page.title}</h2>
+                  <p>{page.description}</p>
+                </div>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ol>
+
+    <section class="eu-prose">
+      <h2 id="credits">Whose pictures these are</h2>
+      <p>
+        The shields, the simple charges and the fleur-de-lis are drawn by Arms itself. The beasts and the modern charges are other people's work, used with thanks
+        and on their terms:
+      </p>
+      <ul>
+        {
+          artCredits.map((credit) => (
+            <li>
+              {credit.what}: {credit.source ? <a href={ref(credit.source, site.host)}>{credit.author}</a> : credit.author},{' '}
+              {credit.licenceUrl ? <a href={ref(credit.licenceUrl, site.host)}>{credit.licence}</a> : credit.licence.toLowerCase()}.
+            </li>
+          ))
+        }
+      </ul>
+      <p>
+        The lions' licence travels with them. A picture you make here with a lion in it should credit Sodacan and be shared on the same terms, CC BY-SA 3.0; Arms
+        writes that credit into every picture it saves. The blazon, the words that describe your arms, is yours to use however you like.
+      </p>
+      <p class="eu-muted">Last updated <time datetime={updated}>{longDate(updated)}</time>. Words you don't know are in the <a href="/glossary/">glossary</a>.</p>
+    </section>
+  </div>
+</Page>
+
+<style>
+  .parts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .part {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .part img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .words {
+    gap: var(--space-2);
+  }
+
+  .part h2 {
+    font: var(--type-heading);
+  }
+</style>

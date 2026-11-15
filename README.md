@@ -4,7 +4,7 @@
 
 Arms is a coat-of-arms maker that follows the rules of heraldry: it draws the shield, writes the blazon, reads a blazon you type, and tells you when you've put colour on colour. It is one of the free worldbuilding tools by [Eurth](https://eurth.org), a worldbuilding and roleplay community since 2004, and will live at arms.eurth.org. It is the sister tool of [Flagwright](https://flag.eurth.org).
 
-Status: the engine, the templates, the guide and the glossary are written and tested. The site is not built yet. What's next, what each stage added and what's not planned is in the [roadmap](roadmap.md).
+Status: the engine, the templates, the guide and the glossary are written and tested, and the site's pages are built. The maker itself is next. What's next, what each stage added and what's not planned is in the [roadmap](roadmap.md).
 
 ## How it works
 
@@ -36,6 +36,9 @@ Status: the engine, the templates, the guide and the glossary are written and te
 | The templates | `src/arms/templates.ts` |
 | Who drew what, for the footer | `src/arms/credits.ts` |
 | The guide (eight pages) and the glossary | `src/content/` |
+| Reading the guide's Markdown; the figure files | `src/lib/guide.ts`, `src/lib/figures.ts` |
+| Pages: maker, guide, glossary, templates, 404, figures | `src/pages/` |
+| What the tool is called and where it lives | `eurth.config.mjs` |
 | Tests | `tests/` |
 
 ## Adding to it
@@ -48,12 +51,17 @@ Status: the engine, the templates, the guide and the glossary are written and te
 
 ## Local development
 
-Needs Node 22 or newer.
+Astro 7 needs Node 22.23 or newer.
 
 ```bash
 npm install
-npm run check    # TypeScript
-npm test         # unit tests
+npm run dev      # dev server on http://localhost:4321
+npm run check    # Astro and TypeScript checks
+npm run build    # static build into dist/, with the headers, the service worker and the figures
+npm test         # unit tests, and after a build the handbook's checks of the built site
+npm run preview  # the built site as Cloudflare serves it, on http://localhost:8787
+npm run axe      # accessibility checks of the built site (needs Google Chrome)
+npm run smoke    # the built site in a real browser (needs Google Chrome)
 npm run sheet    # writes sheet/index.html: everything the engine draws, to check by eye
 python3 tools/beasts.py   # remakes src/arms/beasts/ from art/commons/
 ```

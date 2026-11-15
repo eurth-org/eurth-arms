@@ -6,7 +6,7 @@ Three parts: what comes next, what each release added (newest first), and what's
 
 ## Where to pick up
 
-**15 November 2026.** Phase 1 is finished: the whole engine, the templates, the guide and the glossary are written and tested (118 tests; `npm test`, `npm run check`). Nothing of the site exists yet. **Next: Phase 2, step 13.** @eurth/style 1.0.1 and its starter template are released, so nothing is in the way.
+**15 November 2026.** Phase 1 is finished, and Phase 2 has begun: the site is scaffolded from @eurth/style's starter (1.1.0), and the guide (an index and eight pages), the glossary, the templates and a start page without the maker are built and pass the handbook's suites (185 tests; `npm run check`, `npm run build`, `npm test`, in that order). **Next: Phase 2, step 15, the maker** (`src/ui/Maker.svelte`, to be placed on `src/pages/index.astro` above "How it works"). Astro 7 needs Node 22.23 or newer: on Stijn's machine that is `/opt/homebrew/bin/node` (26), which must come first on the PATH.
 
 What a new session should know:
 
@@ -17,7 +17,7 @@ What a new session should know:
 
 Waiting on others:
 
-- **@eurth/profile 1.0.0** is written but was not tagged when last checked (`gh release list -R eurth-org/eurth-profile`). The site needs it for the profile buttons. Its `arms` section already holds what the brief asks for; Arms adds one key of its own, `shape`, which the schema allows.
+- Nothing. @eurth/style 1.1.0 and @eurth/profile 1.0.0 are both released and installed. The profile's `arms` section already holds what the brief asks for; Arms adds one key of its own, `shape`, which the schema allows.
 
 Answered by Stijn, or settled by the brief:
 
@@ -27,7 +27,9 @@ Answered by Stijn, or settled by the brief:
 
 ## Next
 
-### Phase 2: the site (@eurth/style 1.0.1 is released, so this can start)
+### Phase 2: the site
+
+Done so far: step 13 (the starter, renamed), and of step 14 every page but the maker's own part of the start page. The guide's Markdown is read by `src/lib/guide.ts`; every figure is a file under `/figures/`, made at build time (`src/lib/figures.ts`).
 
 13. Start from the starter template in eurth-style; read HANDBOOK.md first, and where it differs from this plan or from Flagwright, the handbook wins. Known differences from Flagwright already: the design lives in the query string, not after the `#`; nothing is saved in the browser; the shell, tokens and theme switch come from @eurth/style.
 14. Pages: Maker, Guide (an index and the eight pages), Glossary, Templates, with titles ("Arms: free online coat-of-arms maker for worldbuilders"), descriptions, canonical links, JSON-LD (WebApplication, BreadcrumbList, DefinedTermSet, Organization), sitemap.xml, robots.txt, llms.txt and Open Graph images.

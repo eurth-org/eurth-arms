@@ -6,7 +6,7 @@
  * picture that uses a beast (render.ts, creditLine); the maker must show it beside the
  * download buttons too.
  */
-import { beastCredits } from './beasts';
+import { beastCredits } from './beasts/list';
 
 export interface ArtCredit {
   /** What it is, for the sentence: "Lions". */

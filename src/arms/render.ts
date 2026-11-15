@@ -8,7 +8,8 @@
  * the chief and its charges, the bordure; all clipped to the shield, whose outline is drawn
  * last.
  */
-import { beastCredits, beasts } from './beasts';
+import { beastCredits, beastIds } from './beasts/list';
+import { beastArt } from './beasts/registry';
 import type { BeastCredit } from './beasts/types';
 import { blazon } from './blazon';
 import { drawnArt } from './charges';
@@ -52,6 +53,16 @@ const furs: Readonly<Record<string, () => string>> = {
 /** The beast drawing for a charge in its attitude: "lion-passant-guardant". */
 const beastId = (group: ChargeGroup): string => `${group.charge}-${(group.attitude ?? '').replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`;
 
+/**
+ * The beast drawings a design needs that aren't ready to draw yet. The browser fetches these
+ * (beasts/lazy.ts) and draws again; until then the beast is simply not there.
+ */
+export function missingBeasts(design: Arms): string[] {
+  const arms = cleanArms(design);
+  const ids = [arms.charges, arms.onOrdinary, arms.onChief].flatMap((group) => (group ? [beastId(group)] : []));
+  return [...new Set(ids)].filter((id) => beastIds.includes(id) && !beastArt(id));
+}
+
 /** The drawings from Wikimedia Commons a design uses, for giving credit where it is shown or saved. */
 export function creditsFor(design: Arms): BeastCredit[] {
   const arms = cleanArms(design);
@@ -89,7 +100,7 @@ class Picture {
         // A black beast is drawn with pale lines, or nothing of it could be seen.
         K: worn === 'sable' ? '#b9b9b9' : OUTLINE,
       };
-      const body = beasts[id]!.body.replace(/%([BWTK])/g, (_, role: string) => roles[role]!);
+      const body = beastArt(id)!.body.replace(/%([BWTK])/g, (_, role: string) => roles[role]!);
       this.beasts.set(key, `<g id="${key}" fill="none" fill-rule="evenodd" stroke="${roles.K}" stroke-width="2.5" stroke-linejoin="round">${body}</g>`);
     }
     return key;
@@ -115,7 +126,9 @@ class Picture {
 }
 
 function chargeSvg(group: ChargeGroup, slots: Slot[], picture: Picture): string {
-  const beast = beasts[beastId(group)];
+  const beast = beastArt(beastId(group));
+  // A beast whose drawing hasn't arrived yet is left out, not drawn as something else.
+  if (!beast && beastIds.includes(beastId(group))) return '';
   if (beast) {
     const id = picture.beast(beastId(group), group.tincture);
     return slots

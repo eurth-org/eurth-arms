@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { beastCredits, beasts } from '../src/arms/beasts';
+import { beastCredits, beastIds, beasts } from '../src/arms/beasts';
 import { blazon } from '../src/arms/blazon';
 import { charges, pickable } from '../src/arms/catalogue';
 import { drawnArt } from '../src/arms/charges';
@@ -10,7 +10,7 @@ import { slotsOf } from '../src/arms/layout';
 import { arrangementsFor, attitudes, attitudesFor, cleanArms, countsFor, defaultArms, divisions, lines, ordinaries, patterns, shapes, type Arms } from '../src/arms/model';
 import { modernArt } from '../src/arms/modern';
 import { parseBlazon } from '../src/arms/parse';
-import { armsSvg, creditLine, creditsFor } from '../src/arms/render';
+import { armsSvg, creditLine, creditsFor, missingBeasts } from '../src/arms/render';
 import { shield } from '../src/arms/shapes';
 import { seeded, wildArms } from './helpers';
 
@@ -61,6 +61,13 @@ describe('the drawings', () => {
       expect(art.body, id).toContain('fill="%B"');
       expect(art.body.length, id).toBeLessThan(90_000);
     }
+  });
+
+  it('can be fetched one at a time, as the browser does', async () => {
+    const { loadBeast } = await import('../src/arms/beasts/lazy');
+    for (const id of beastIds) expect(await loadBeast(id), id).toBe(true);
+    expect(await loadBeast('wyvern-volant')).toBe(false);
+    expect(missingBeasts(read('Gules, three lions passant guardant in pale Or'))).toEqual([]);
   });
 
   it('each come with their author and licence', () => {
