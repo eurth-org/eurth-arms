@@ -68,6 +68,22 @@ npm run sheet    # writes sheet/index.html: everything the engine draws, to chec
 python3 tools/beasts.py   # remakes src/arms/beasts/ from art/commons/
 ```
 
+## Deployment
+
+The site runs as the `eurth-arms` Worker (static assets only) on the Cloudflare account that holds the eurth.org zone. The custom domain in `wrangler.jsonc` owns the `arms.eurth.org` DNS record, so the first deploy is what makes the site exist.
+
+- **Before the door** (10 December 2026, 00:00 Europe/Brussels): pushes to `main` are checked, built and tested by GitHub Actions (`.github/workflows/ci.yml`) and not deployed. Preview locally with `npm run preview`.
+- **The door:** `.github/workflows/launch.yml` starts at 22:30 UTC on 9 December, builds the site as it will be at the door's time, waits for the time in `LAUNCH_AT` and deploys. If it hasn't started by 22:45 UTC, start it by hand. Delete the file once the site is live.
+- **After:** every green push to `main` deploys, and `.github/workflows/nightly.yml` rebuilds each night so the menus gain each newly opened door and new releases of @eurth/style arrive.
+
+Deploying uses the organisation's `CLOUDFLARE_API_TOKEN` secret; without it the deploy step is skipped with a warning.
+
+## Releasing
+
+1. In the same commits as the work, update [roadmap.md](roadmap.md): move finished items out of Next, and add or extend the release's dated section.
+2. Run `npm run check`, `npm run build`, `npm test`, `npm run axe` and `npm run smoke`.
+3. Bump the version in `package.json`, merge to `main`, and tag it.
+
 ## Credits
 
 - Lions by [Sodacan](https://commons.wikimedia.org/wiki/User:Sodacan), from Wikimedia Commons, under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), recoloured. Pictures made with a lion in them carry that licence: credit Sodacan and share them on the same terms. Arms writes the credit into every picture it saves.

@@ -6,7 +6,7 @@ Three parts: what comes next, what each release added (newest first), and what's
 
 ## Where to pick up
 
-**15 November 2026.** Phase 1 is finished and most of Phase 2 is built: the site is scaffolded from @eurth/style's starter (1.1.0); the guide, the glossary and the templates are pages; and the maker works (`src/ui/Maker.svelte`): Simple and Advanced, Random, undo and redo, the live blazon, a typed blazon drawn, the tincture check with its fixes, the link, the share row, SVG, PNG and WebP downloads, the profile buttons, the credit notice for lions, the drop and the emu. 187 tests pass (`npm run check`, `npm run build`, `npm test`, in that order). **Next: Phase 2, step 19 onwards:** `npm run images` (the favicon, icons and sharing image are still the starter's), `npm run axe` and `npm run smoke` (both need Google Chrome and have not been run), a look at every page in both themes and at phone width, and the handbook's checklist. Astro 7 needs Node 22.23 or newer: on Stijn's machine that is `/opt/homebrew/bin/node` (26), which must come first on the PATH.
+**15 November 2026.** Arms is built and waiting for its door. Everything in the brief is done: the engine, the maker, the guide, the glossary, the templates, the profile section, the exports, the drop and the emu. All of the handbook's checks pass on this machine: `npm run check`, `npm run build`, `npm test` (187 tests, among them the handbook's own suites on the built site), `npm run axe` (13 pages, both themes, no findings) and `npm run smoke`. The launch workflow is set for 22:30 UTC on 9 December and waits for `LAUNCH_AT`. **Next: the short list under "Before the door" below.** Astro 7 needs Node 22.23 or newer: on Stijn's machine that is `/opt/homebrew/bin/node` (26), which must come first on the PATH.
 
 What a new session should know:
 
@@ -27,22 +27,17 @@ Answered by Stijn, or settled by the brief:
 
 ## Next
 
-### Phase 2: the site
+### Before the door (10 December 2026, 00:00 Europe/Brussels)
 
-Done so far: steps 13 to 18, and the workflows of step 20 (copied from the starter, with the cron set for 9 December). Not yet run or checked: steps 19 and 21. The guide's Markdown is read by `src/lib/guide.ts`; every figure is a file under `/figures/`, made at build time (`src/lib/figures.ts`).
-
-13. Start from the starter template in eurth-style; read HANDBOOK.md first, and where it differs from this plan or from Flagwright, the handbook wins. Known differences from Flagwright already: the design lives in the query string, not after the `#`; nothing is saved in the browser; the shell, tokens and theme switch come from @eurth/style.
-14. Pages: Maker, Guide (an index and the eight pages), Glossary, Templates, with titles ("Arms: free online coat-of-arms maker for worldbuilders"), descriptions, canonical links, JSON-LD (WebApplication, BreadcrumbList, DefinedTermSet, Organization), sitemap.xml, robots.txt, llms.txt and Open Graph images.
-15. The maker, as a Svelte 5 island (the beasts' drawings loaded one by one as they are needed, never all at once), laid out as the mock-up: steps on the left (Shield, Field, Ordinary, Charges), the shield, its blazon and "Or type a blazon" on the right. A toolbar with Random and Simple/Advanced, as on Flagwright. Tincture swatches that carry their names. The tincture check as a status line with a word and an icon ("Rule of tincture respected" or "Colour on colour: the chevron gules lies on azure") and a "Fix it" button. Undo and redo, kept in memory for the visit only.
-16. Save and load: Copy link, and the profile file through @eurth/profile's buttons (file picker and drag and drop).
-17. Exports: SVG, PNG and WebP from 320 to 3840px and in the handbook's sharing sizes, the blazon text, Copy picture, Copy description, and the Share dialog. Beside the download buttons, when the design has a lion in it: "This lion is by Sodacan (CC BY-SA 3.0). Credit Sodacan and share your picture on the same terms." The saved SVG already carries the credit; PNG and WebP can't, so the notice matters most there.
-18. Delight: a charge settles onto the shield with a small drop (under half a second, nothing for reduced motion); the emu; the suite's own touches from @eurth/style.
-19. Offline, install, security headers, contrast, axe and Lighthouse checks, as the handbook asks.
-20. CI, and the launch workflow: `LAUNCH_AT` is `2026-12-10T00:00:00+01:00`, the scheduled run starts at 22:30 UTC on 9 December, and it also runs by hand. No custom domain and no workers.dev deploy before then.
-21. The footer's credits: `footerCredit` from `src/arms/credits.ts` beside the handbook's own (Font Awesome, line-md), and a credits section on the guide's index naming every source in `art/commons/README.md`. README (use, development, deployment), docs/feedback-log.md, and the handbook's checklist. Done when that passes, every template's blazon parses back to the same arms, and the tincture check is unit-tested.
+- **Stijn to look it over:** `npm run preview`, then http://localhost:8787. Above all the three things assumed rather than asked: no Crest step, "Save profile" in place of "Add to country card", and invented template nations.
+- **Stijn to confirm the lions' licence is acceptable.** Sodacan's lions are CC BY-SA 3.0: pictures with a lion in them must credit Sodacan and be shared alike. Arms says so in the footer, beside the downloads, on the guide's front page and inside every saved SVG. If share-alike is unwanted, the alternative is public-domain lions, which exist on Wikimedia Commons in fewer attitudes and a rougher hand.
+- **Lighthouse** runs in CI on `main`; read its report after the next push and fix anything under the handbook's marks.
+- **On the evening of 9 December,** check that the Launch workflow has started by 22:45 UTC; if not, start it by hand. After the launch, delete `.github/workflows/launch.yml`.
 
 ### After launch
 
+- **A mark of its own** for the favicon and the home-screen icon (they are the Eurth yurt for now).
+- **Wide beasts drawn larger:** three lions passant in pale are sized by the circle each must fit, and could fill more of the shield's width.
 - **The full achievement:** helm, crest, mantling, supporters and a motto scroll around the shield.
 - **Hatching:** the arms in black and white with the engravers' lines and dots for each tincture, as a view and a download.
 - **Marshalling in the maker:** impale or quarter two finished arms.
@@ -51,9 +46,22 @@ Done so far: steps 13 to 18, and the workflows of step 20 (copied from the start
 - **Wiki-ready output:** an IIWiki snippet with the blazon and a symbolism section to fill in.
 - **The link to Card,** once its door has opened.
 
-## 15 November 2026: the engine (not released; there is no site yet)
+## 15 November 2026: built, and waiting for its door (0.1.0)
 
-Phase 1 of the plan: everything that needs no page.
+The first version. It goes live on 10 December 2026.
+
+**The site**
+
+- **The maker:** Simple mode (a shield, a field, an ordinary, a charge) and Advanced mode (lines of partition, a chief and a bordure beside the ordinary, charges on the ordinary and on the chief, attitudes, points and arrangements); Random; undo, redo and start again.
+- **The blazon, live:** written under the shield as the design changes, with a button to copy it; and a box to type one, which is drawn or answered with what couldn't be read.
+- **The rule of tincture, live:** a status line with a word and an icon, each finding in a sentence with its own fix, and "Fix all".
+- **Taking it away:** the design in the link (`?d=1.…`, or `?blazon=…` for a typed one); SVG, PNG and WebP from 320 to 3840 pixels wide and in the six sharing sizes; Copy link, Copy picture, Copy description and the Share dialog; the Eurth profile file, loaded and saved.
+- **Credit where it is due:** a notice beside the downloads when a lion is in the picture, the footer's line, and a section on the guide's front page.
+- **Pages for search engines and newcomers:** the maker with how-to and questions; the guide's front page and eight parts, each with sources and its date; the glossary; the templates. Structured data on each, a sitemap, `robots.txt`, `llms.txt`, and a sharing image.
+- **Delight:** a newly placed charge settles onto the shield with a small drop (and a soft knock, once sound is on); "Or, an emu proper" draws an emu and gets a word from the herald.
+- **The kit:** from @eurth/style's starter (1.1.0): the shared shell, tokens only, the strict Content-Security-Policy, the service worker, the web manifest, and the CI, nightly and launch workflows. The beasts' drawings are fetched one at a time, as a design first needs them; the 163 figures are files of their own, loaded as they scroll into view.
+
+**The engine**
 
 - **Tinctures:** two metals, five colours and two furs, painted flat, with azure in Eurth's blue and lightness set so that red and green, gold and green, and blue and purple can be told apart without their hue.
 - **The model:** six shield shapes; plain, divided (ten ways) and patterned (four ways) fields; seven principal ordinaries with a chief and a bordure beside them; five lines of partition; charges on the field, on the ordinary and on the chief, one to six, in nine arrangements.

@@ -41,27 +41,27 @@ const description = `${glossary.length} heraldry terms explained in plain words,
             {glossary
               .filter((entry) => entry.term.charAt(0).toUpperCase() === letter)
               .map((entry) => (
-                <div class="term" id={entry.id}>
+                <div class:list={['term', { pictured: entry.figure }]} id={entry.id}>
+                  <dt>{entry.term}</dt>
                   {entry.figure && (
-                    <img src={figureSrc(entry.figure, entry.shape)} alt={figureAlt(entry.figure, entry.shape)} width={WIDTH} height={HEIGHT} loading="lazy" decoding="async" />
+                    <dd class="picture">
+                      <img src={figureSrc(entry.figure, entry.shape)} alt={figureAlt(entry.figure, entry.shape)} width={WIDTH} height={HEIGHT} loading="lazy" decoding="async" />
+                    </dd>
                   )}
-                  <div class="eu-stack words">
-                    <dt>{entry.term}</dt>
-                    <dd>{entry.definition}</dd>
-                    {entry.figure && <dd class="eu-data eu-muted">{entry.figure}</dd>}
-                    {entry.see?.length && (
-                      <dd class="eu-muted">
-                        See also{' '}
-                        {entry.see.map((id, i) => (
-                          <>
-                            {i > 0 && ', '}
-                            <a href={`#${id}`}>{byTerm.get(id)?.toLowerCase()}</a>
-                          </>
-                        ))}
-                        .
-                      </dd>
-                    )}
-                  </div>
+                  <dd>{entry.definition}</dd>
+                  {entry.figure && <dd class="eu-data eu-muted">{entry.figure}</dd>}
+                  {entry.see?.length && (
+                    <dd class="eu-muted">
+                      See also{' '}
+                      {entry.see.map((id, i) => (
+                        <>
+                          {i > 0 && ', '}
+                          <a href={`#${id}`}>{byTerm.get(id)?.toLowerCase()}</a>
+                        </>
+                      ))}
+                      .
+                    </dd>
+                  )}
                 </div>
               ))}
           </dl>
@@ -83,27 +83,28 @@ const description = `${glossary.length} heraldry terms explained in plain words,
     margin: 0;
   }
 
+  /* A term is a small grid: its picture down the left, its words beside it. */
   .term {
     display: grid;
     grid-template-columns: 72px minmax(0, 1fr);
-    gap: var(--space-4);
-    align-items: start;
+    gap: var(--space-1) var(--space-4);
+    align-content: start;
     scroll-margin-top: var(--space-8);
   }
 
-  /* A term with no picture keeps its words in the same column as the others. */
-  .term > .words:first-child {
+  .term > * {
     grid-column: 2;
+  }
+
+  .term > .picture {
+    grid-row: 1 / span 4;
+    grid-column: 1;
   }
 
   .term img {
     display: block;
     width: 100%;
     height: auto;
-  }
-
-  .words {
-    gap: var(--space-1);
   }
 
   dt {
