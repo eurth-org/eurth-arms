@@ -137,7 +137,7 @@ export function describeArms(design: Arms): string {
     first += `${arms.field.kind === 'plain' ? '' : ','} with ${describeGroup(arms.charges)}`;
   }
 
-  const sentences = [`${first}.`];
+  const sentences = [`${first.charAt(0).toUpperCase()}${first.slice(1)}.`];
   if (arms.chief) {
     const chief = describeEdge(arms.chief, 'band').replace(/^an? /, '');
     sentences.push(`Across the top is ${a(chief)}${arms.onChief ? `, with ${describeGroup(arms.onChief)} on it` : ''}.`);

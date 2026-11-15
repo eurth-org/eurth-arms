@@ -14,18 +14,30 @@ import type { Line } from './model';
 /** The length of one scallop, tooth, wave or battlement. */
 const period: Readonly<Record<Exclude<Line, 'straight'>, number>> = {
   engrailed: 56,
-  indented: 44,
+  indented: 32,
   wavy: 112,
   embattled: 76,
 };
 
-/** How far a line strays from the straight, for keeping charges clear of it. */
+/**
+ * How far a line strays from the straight, for keeping charges clear of it: outwards, into
+ * whatever lies beside the shape, and inwards, into the shape itself. Battlements only stand
+ * out; scallops only bite in.
+ */
 export const lineMargin: Readonly<Record<Line, number>> = {
   straight: 0,
-  engrailed: 12,
+  engrailed: 0,
   indented: 13,
   wavy: 15,
   embattled: 26,
+};
+
+export const lineMarginInside: Readonly<Record<Line, number>> = {
+  straight: 0,
+  engrailed: 20,
+  indented: 13,
+  wavy: 15,
+  embattled: 0,
 };
 
 const WAVE = 14;
@@ -41,7 +53,7 @@ export function edgePath(a: Pt, b: Pt, line: Line): string {
     const n = Math.max(1, Math.round(len / period.engrailed));
     const p = len / n;
     let d = '';
-    for (let i = 0; i < n; i++) d += `Q${pt(add(add(a, t, (i + 0.5) * p), inward, p * 0.42))} ${pt(add(a, t, (i + 1) * p))}`;
+    for (let i = 0; i < n; i++) d += `Q${pt(add(add(a, t, (i + 0.5) * p), inward, p * 0.7))} ${pt(add(a, t, (i + 1) * p))}`;
     return d;
   }
 
@@ -74,7 +86,7 @@ export function edgePath(a: Pt, b: Pt, line: Line): string {
       })
       .join('');
   }
-  const amp = Math.min(lineMargin.indented, hp * 0.6);
+  const amp = Math.min(lineMargin.indented, hp * 0.85);
   return `${order.map((k) => `L${pt(add(add(s, tc, (k + 0.5) * hp), nc, (k % 2 ? 1 : -1) * amp))}`).join('')}L${pt(b)}`;
 }
 
@@ -117,7 +129,7 @@ export function loopPath(polygon: readonly Pt[], line: Line): string {
   const p = total / n;
   if (line === 'engrailed') {
     let d = `M${pt(at(0).p)}`;
-    for (let i = 0; i < n; i++) d += `Q${pt(off((i + 0.5) * p, -p * 0.42))} ${pt(at((i + 1) * p).p)}`;
+    for (let i = 0; i < n; i++) d += `Q${pt(off((i + 0.5) * p, -p * 0.7))} ${pt(at((i + 1) * p).p)}`;
     return `${d}Z`;
   }
   if (line === 'embattled') {
@@ -133,6 +145,6 @@ export function loopPath(polygon: readonly Pt[], line: Line): string {
     for (let k = 0; k < halves; k++) d += `Q${pt(off((k + 0.5) * hp, (k % 2 ? 1 : -1) * WAVE * 2))} ${pt(at((k + 1) * hp).p)}`;
     return `${d}Z`;
   }
-  const amp = Math.min(lineMargin.indented, hp * 0.6);
+  const amp = Math.min(lineMargin.indented, hp * 0.85);
   return `M${Array.from({ length: halves }, (_, k) => pt(off((k + 0.5) * hp, (k % 2 ? 1 : -1) * amp))).join('L')}Z`;
 }

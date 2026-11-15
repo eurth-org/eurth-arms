@@ -13,7 +13,7 @@
  * mullets fit a lozenge as well as a heater.
  */
 import { add, dist, inset, roomInside, spanAt, type Pt } from './geometry';
-import { lineMargin } from './lines';
+import { lineMargin, lineMarginInside } from './lines';
 import type { Arms, ChargeGroup, Division, Field, OrdinaryType } from './model';
 import { shield, type Shield } from './shapes';
 
@@ -339,6 +339,12 @@ export function slotsOf(arms: Arms): Slots {
     outside: [...(ordinary ? [[ordinary.polygon, ordinaryMargin + GAP] as [Pt[], number]] : []), ...(chief ? [[chief.polygon, chiefMargin + GAP] as [Pt[], number]] : [])],
   };
   const mirror = type !== 'bend';
+  /** How far one can go from a point in a direction and still be well inside the shield. */
+  const run = (from: Pt, direction: Pt): number => {
+    let t = 0;
+    while (t < 600 && roomInside(add(from, direction, t + 6), s.outline) > edge + 46) t += 6;
+    return t;
+  };
 
   const slots: Slots = { field: [], ordinary: [], chief: [] };
 
@@ -409,7 +415,7 @@ export function slotsOf(arms: Arms): Slots {
   if (arms.onOrdinary && ordinary && type) {
     const n = arms.onOrdinary.count;
     const region: Region = {
-      inside: [[s.outline, edge + GAP], [ordinary.polygon, ordinaryMargin + GAP * 0.7]],
+      inside: [[s.outline, edge + GAP], [ordinary.polygon, lineMarginInside[arms.ordinary!.line] + GAP * 0.7]],
       outside: chief ? [[chief.polygon, chiefMargin + GAP]] : [],
     };
     let ideals: Pt[] = [];
@@ -423,15 +429,20 @@ export function slotsOf(arms: Arms): Slots {
         ideals = Array.from({ length: n }, (_, i) => [cx + hw(cy) * 0.9 * ((2 * i + 1) / n - 1), cy] as Pt);
         break;
       case 'bend': {
-        const gap = Math.min(150, 520 / n);
-        ideals = Array.from({ length: n }, (_, i) => add(c, [S, S], (i - (n - 1) / 2) * gap - 24));
+        // Spread along as much of the bend as the shield shows.
+        const [from, to] = [-run(c, [-S, -S]), run(c, [S, S])];
+        const gap = Math.min(150, (to - from) / n);
+        ideals = Array.from({ length: n }, (_, i) => add(c, [S, S], (from + to) / 2 + (i - (n - 1) / 2) * gap));
         rot = 45;
         break;
       }
       case 'chevron': {
         const { outer, inner } = chevronApex(F);
         const mid = (outer + inner) / 2;
-        const offsets = n === 1 ? [0] : n === 3 ? [-175, 0, 175] : [-225, -115, 0, 115, 225];
+        const apex: Pt = [cx, mid];
+        // As far down each arm as the shield shows it.
+        const far = Math.min(225, run(apex, [1 / Math.hypot(1, SLOPE), SLOPE / Math.hypot(1, SLOPE)]) / Math.hypot(1, SLOPE));
+        const offsets = n === 1 ? [0] : n === 3 ? [-0.78 * far, 0, 0.78 * far] : [-far, -0.5 * far, 0, 0.5 * far, far];
         ideals = offsets.map((dx) => [cx + dx, mid + SLOPE * Math.abs(dx) + (dx ? 0 : 10)] as Pt);
         break;
       }
@@ -458,7 +469,7 @@ export function slotsOf(arms: Arms): Slots {
   if (arms.onChief && chief) {
     const n = arms.onChief.count;
     const y = (s.top + edge + chiefLine(s) - chiefMargin) / 2 + (arms.shape === 'polish' ? 16 : arms.shape === 'lozenge' || arms.shape === 'roundel' ? 22 : 0);
-    const region: Region = { inside: [[s.outline, edge + GAP], [chief.polygon, chiefMargin + GAP * 0.7]], outside: [] };
+    const region: Region = { inside: [[s.outline, edge + GAP], [chief.polygon, lineMarginInside[arms.chief!.line] + GAP * 0.7]], outside: [] };
     const ideals = Array.from({ length: n }, (_, i) => [cx + hw(y) * 0.9 * ((2 * i + 1) / n - 1), y] as Pt);
     slots.chief = place(ideals, 84, region, cx, true, 36);
   }

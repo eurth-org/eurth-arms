@@ -126,8 +126,11 @@ export function inset(polygon: readonly Pt[], by: number): Pt[] {
     const sum: Pt = [n1[0] + n2[0], n1[1] + n2[1]];
     const len = Math.hypot(sum[0], sum[1]) || 1;
     const unit: Pt = [sum[0] / len, sum[1] / len];
-    // At a corner the point must go further to stay the same distance from both edges.
-    const mitre = Math.min(2.5, 1 / Math.max(0.2, unit[0] * n1[0] + unit[1] * n1[1]));
+    // At a corner the point must go further to stay the same distance from both edges; but
+    // only at a corner that points outwards. At one that points in (the notch beside the
+    // French shield's foot) going further would throw up a spike.
+    const outward = (here[0] - prev[0]) * (next[1] - here[1]) - (here[1] - prev[1]) * (next[0] - here[0]) >= 0;
+    const mitre = outward ? Math.min(2.5, 1 / Math.max(0.2, unit[0] * n1[0] + unit[1] * n1[1])) : 1;
     moved.push(add(here, unit, by * mitre));
   }
   return moved.filter((p) => insidePolygon(p, polygon) && distToPolygon(p, polygon) > by * 0.97);
