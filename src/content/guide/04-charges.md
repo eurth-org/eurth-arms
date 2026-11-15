@@ -2,7 +2,7 @@
 title: Charges and their attitudes
 description: The stars, rings, lilies, lions and eagles that sit on a shield, the poses beasts take, how several charges are arranged, and what may be a charge.
 order: 4
-updated: 2026-11-14
+updated: 2026-11-15
 sources:
   - author: Arthur Charles Fox-Davies
     title: A Complete Guide to Heraldry
@@ -19,7 +19,7 @@ sources:
     year: 1997
 ---
 
-A [charge](/glossary/#charge) is anything placed on the shield. The ordinaries are charges too, but the word usually means the pictures: stars, beasts, flowers, tools. Anything can be a charge. A small number of them have done most of the work since the twelfth century, and the maker draws seven of those in a heraldic style of its own.
+A [charge](/glossary/#charge) is anything placed on the shield. The ordinaries are charges too, but the word usually means the pictures: stars, beasts, flowers, tools. Anything can be a charge. A small number of them have done most of the work since the twelfth century, and the maker has seven of those. Five are drawn in a plain style of its own. The lions and eagles are the work of heraldic artists, borrowed from Wikimedia Commons.
 
 ## Simple shapes
 
@@ -59,19 +59,34 @@ The [fleur-de-lis](/glossary/#fleur-de-lis) is a stylised lily: three petals tie
 
 The [lion](/glossary/#lion) is the commonest beast in heraldry, and the [eagle](/glossary/#eagle) is the commonest bird. Kings liked the first and emperors the second.
 
-A beast needs an [attitude](/glossary/#attitude), which is its pose:
+A beast needs an [attitude](/glossary/#attitude), which is its pose. The maker draws a lion in twelve:
 
-- [Rampant](/glossary/#rampant): rearing up on a hind leg, forepaws clawing the air. This is the usual pose for a lion.
+- [Rampant](/glossary/#rampant): rearing up on a hind leg, forepaws clawing the air. This is the usual pose for a lion, and what "a lion" means if the blazon says nothing more.
 - [Passant](/glossary/#passant): walking, with one forepaw raised.
-- [Displayed](/glossary/#displayed): for birds, facing you with wings and legs spread. Nearly every heraldic eagle is displayed.
+- [Statant](/glossary/#statant): standing, with all four paws on the ground.
+- [Salient](/glossary/#salient): leaping, both hind paws down and both forepaws up.
+- [Courant](/glossary/#courant): running flat out.
+- [Sejant](/glossary/#sejant): sitting. [Sejant erect](/glossary/#sejant-erect) is sitting up with the forepaws raised.
+- [Couchant](/glossary/#couchant): lying down with the head up. [Dormant](/glossary/#dormant) is the same with the head on the paws, asleep.
 
-Those three are the ones the maker draws. Others exist: statant is standing with all four paws down, sejant is sitting, couchant is lying down with the head up, dormant is asleep and salient is leaping. A beast normally faces dexter and shows its profile. One that turns its face to the viewer is [guardant](/glossary/#guardant). England's three lions are passant guardant, a pose that French heralds called a leopard.
+A beast normally faces [dexter](/glossary/#dexter) and shows its profile. One that turns its face to the viewer is [guardant](/glossary/#guardant), and the maker draws the rampant, passant and statant lions that way too. England's three lions are [passant guardant](/glossary/#passant-guardant), a pose that French heralds called a leopard.
+
+Birds have attitudes of their own. An eagle [displayed](/glossary/#displayed) faces you with wings and legs spread, and nearly every heraldic eagle is drawn so. An eagle [rising](/glossary/#rising) stands with its wings lifted, about to take off.
 
 ```arms
 Azure, three fleurs-de-lis Or | Three fleurs-de-lis: the arms of the kings of France from the late fourteenth century
 Or, a lion rampant sable | A lion rampant: the arms of the counts of Flanders
-Gules, three lions passant in pale Or | Three lions passant. England's lions also turn their faces to the viewer, which the maker does not draw yet
+Gules, three lions passant guardant in pale Or | Three lions passant guardant: the royal arms of England
 Or, an eagle displayed sable | An eagle displayed: the eagle of the Holy Roman Empire, which later gained a second head
+```
+
+```arms
+Vert, a lion statant Or | Statant
+Gules, a lion salient argent | Salient
+Azure, a lion sejant erect Or | Sejant erect
+Or, a lion couchant gules | Couchant
+Sable, a lion dormant Or | Dormant
+Argent, an eagle rising sable | An eagle rising
 ```
 
 ## Why heraldic beasts look strange
@@ -79,6 +94,8 @@ Or, an eagle displayed sable | An eagle displayed: the eagle of the Holy Roman E
 A heraldic lion does not look much like a lion. It has a wasp waist, enormous claws, a tongue like a flame and a tail like a whip. Few medieval painters had seen a lion, but the main reason is practical. A charge has to be recognised at a distance and it has to fill its space. So the artist exaggerates the parts that identify the animal and stretches the body until it fills the shield.
 
 The blazon fixes what is on the shield and leaves the drawing to the artist. That is why two paintings of the same arms can look quite different and both be correct. It is also good news for a worldbuilder: if you redraw the maker's lion in your own style, the arms are still the same arms.
+
+One practical note. The maker's lions were drawn by Sodacan and are shared under the CC BY-SA 3.0 licence, so a picture with one of them in it should credit Sodacan and be shared on the same terms. The maker writes that credit into every picture it saves. The blazon is yours whatever you do with it.
 
 ## How many, and where
 

@@ -2,7 +2,7 @@
 title: Tinctures and the rule of tincture
 description: The metals, colours and furs of heraldry, the rule that keeps arms readable at a distance, and the famous arms that break it on purpose.
 order: 1
-updated: 2026-11-14
+updated: 2026-11-15
 sources:
   - author: Arthur Charles Fox-Davies
     title: A Complete Guide to Heraldry

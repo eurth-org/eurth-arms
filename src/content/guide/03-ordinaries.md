@@ -2,7 +2,7 @@
 title: The ordinaries, heraldry's bold bands
 description: The bands and simple shapes that cross a shield, from the chief to the pile, how wide to draw them, and how charges sit on and around them.
 order: 3
-updated: 2026-11-14
+updated: 2026-11-15
 sources:
   - author: Arthur Charles Fox-Davies
     title: A Complete Guide to Heraldry

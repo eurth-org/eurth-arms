@@ -2,7 +2,7 @@
 title: Divisions of the field and lines of partition
 description: How a shield is split into halves, quarters and stripes, what each split is called, and the wavy, toothed and battlemented lines that can draw it.
 order: 2
-updated: 2026-11-14
+updated: 2026-11-15
 sources:
   - author: Arthur Charles Fox-Davies
     title: A Complete Guide to Heraldry
