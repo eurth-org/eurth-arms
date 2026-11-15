@@ -21,7 +21,7 @@ Waiting on others:
 
 Answered by Stijn, or settled by the brief:
 
-1. **The drawn charges:** the beasts come from Wikimedia Commons (above). The mullet, crescent, roundel, annulet, fleur-de-lis and the emu are drawn here.
+1. **The drawn charges:** the beasts come from Wikimedia Commons (above). Stijn confirmed on 15 November that Sodacan's lions stay, share-alike licence and all (CC BY-SA 3.0). The mullet, crescent, roundel, annulet, fleur-de-lis and the emu are drawn here.
 2. **The mock-up's Crest tab and "Add to country card" button:** no Crest step in v1; the button is the profile's "Save profile" until Card's door opens on 24 December. (Assumed from the brief; say if not.)
 3. **Template nations:** invented names, sharing the suite's example nations (Hesperwick, Vantmoor, Calderwyn, Hohenfels, Ostaril). (Assumed; say if not.)
 
@@ -30,7 +30,6 @@ Answered by Stijn, or settled by the brief:
 ### Before the door (10 December 2026, 00:00 Europe/Brussels)
 
 - **Stijn to look it over:** `npm run preview`, then http://localhost:8787. Above all the three things assumed rather than asked: no Crest step, "Save profile" in place of "Add to country card", and invented template nations.
-- **Stijn to confirm the lions' licence is acceptable.** Sodacan's lions are CC BY-SA 3.0: pictures with a lion in them must credit Sodacan and be shared alike. Arms says so in the footer, beside the downloads, on the guide's front page and inside every saved SVG. If share-alike is unwanted, the alternative is public-domain lions, which exist on Wikimedia Commons in fewer attitudes and a rougher hand.
 - **On the evening of 9 December,** check that the Launch workflow has started by 22:45 UTC; if not, start it by hand. After the launch, delete `.github/workflows/launch.yml`.
 
 ### After launch
