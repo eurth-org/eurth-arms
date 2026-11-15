@@ -6,7 +6,7 @@ Three parts: what comes next, what each release added (newest first), and what's
 
 ## Where to pick up
 
-**15 November 2026.** Arms is built and waiting for its door. Everything in the brief is done: the engine, the maker, the guide, the glossary, the templates, the profile section, the exports, the drop and the emu. All of the handbook's checks pass on this machine: `npm run check`, `npm run build`, `npm test` (187 tests, among them the handbook's own suites on the built site), `npm run axe` (13 pages, both themes, no findings) and `npm run smoke`. The launch workflow is set for 22:30 UTC on 9 December and waits for `LAUNCH_AT`. **Next: the short list under "Before the door" below.** Astro 7 needs Node 22.23 or newer: on Stijn's machine that is `/opt/homebrew/bin/node` (26), which must come first on the PATH.
+**15 November 2026.** Arms is built and waiting for its door. Everything in the brief is done: the engine, the maker, the guide, the glossary, the templates, the profile section, the exports, the drop and the emu. All of the handbook's checks pass on this machine: `npm run check`, `npm run build`, `npm test` (187 tests, among them the handbook's own suites on the built site), `npm run axe` (13 pages, both themes, no findings) and `npm run smoke`. CI on GitHub is green too, Lighthouse's marks included, and holds the deploy back until the door. The launch workflow is set for 22:30 UTC on 9 December and waits for `LAUNCH_AT`. **Next: the short list under "Before the door" below.** Astro 7 needs Node 22.23 or newer: on Stijn's machine that is `/opt/homebrew/bin/node` (26), which must come first on the PATH.
 
 What a new session should know:
 
@@ -31,7 +31,6 @@ Answered by Stijn, or settled by the brief:
 
 - **Stijn to look it over:** `npm run preview`, then http://localhost:8787. Above all the three things assumed rather than asked: no Crest step, "Save profile" in place of "Add to country card", and invented template nations.
 - **Stijn to confirm the lions' licence is acceptable.** Sodacan's lions are CC BY-SA 3.0: pictures with a lion in them must credit Sodacan and be shared alike. Arms says so in the footer, beside the downloads, on the guide's front page and inside every saved SVG. If share-alike is unwanted, the alternative is public-domain lions, which exist on Wikimedia Commons in fewer attitudes and a rougher hand.
-- **Lighthouse** runs in CI on `main`; read its report after the next push and fix anything under the handbook's marks.
 - **On the evening of 9 December,** check that the Launch workflow has started by 22:45 UTC; if not, start it by hand. After the launch, delete `.github/workflows/launch.yml`.
 
 ### After launch
