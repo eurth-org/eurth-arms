@@ -9,7 +9,10 @@ import { blazon } from '../src/arms/blazon';
 import { pickable } from '../src/arms/catalogue';
 import { arrangementsFor, attitudes, attitudesFor, cleanArms, countsFor, divisions, lines, ordinaries, patterns, shapes, type Arms } from '../src/arms/model';
 import { parseBlazon } from '../src/arms/parse';
+import { randomArms } from '../src/arms/random';
 import { armsSvg } from '../src/arms/render';
+import { templates } from '../src/arms/templates';
+import { seeded } from '../tests/helpers';
 
 const azure = { kind: 'plain', tincture: 'azure' };
 const read = (text: string, shape = 'heater'): Arms => {
@@ -32,6 +35,8 @@ section('Beasts in every attitude', attitudes.flatMap((attitude) => ['or', 'sabl
 section('Arrangements, on every shape', shapes.flatMap((shape) => countsFor('field').flatMap((count) => arrangementsFor(count).length ? arrangementsFor(count).map((arrangement) => ({ shape, field: { kind: 'plain', tincture: 'sable' }, charges: { charge: 'mullet', count, tincture: 'or', arrangement } })) : [{ shape, field: { kind: 'plain', tincture: 'sable' }, charges: { charge: 'mullet', count, tincture: 'or' } }])));
 section('Around and on each ordinary', ordinaries.flatMap((type) => [...countsFor('field', type).map((count) => ({ field: { kind: 'plain', tincture: 'gules' }, ordinary: { type, tincture: 'or' }, charges: { charge: 'mullet', count, tincture: 'argent' } })), ...countsFor('ordinary', type).map((count) => ({ field: { kind: 'plain', tincture: 'gules' }, ordinary: { type, tincture: 'or' }, onOrdinary: { charge: 'lion', count, tincture: 'sable' } }))]));
 section('Everything at once, on every shape', shapes.flatMap((shape) => [read('Per pale gules and azure, on a fess wavy argent between three crescents Or, three torteaux, on a chief ermine a lion passant gules, a bordure engrailed Or', shape), read('Or, on a bend sable between six mullets gules, three bezants, on a chief azure three fleurs-de-lis Or', shape), read('Argent, on a cross gules between four eagles displayed sable, five plates, a bordure azure', shape), read('Vert, on a chevron embattled Or between three lions rampant argent, five hurts', shape)]));
+section('Templates', templates.map((t) => read(t.blazon, t.shape)));
+section('Random', (() => { const rng = seeded(11); return Array.from({ length: 36 }, () => randomArms(rng)); })());
 section('Modern charges', pickable.filter((c) => c.kind === 'modern').map((c) => ({ field: { kind: 'plain', tincture: 'or' }, charges: { charge: c.id, count: 1, tincture: 'sable' } })));
 
 it('writes the contact sheet', () => {
